@@ -12,3 +12,6 @@ I've done work with web development and UI testing/QC on iOS (XCUITest) and Andr
 
 ### Cyril
 I am somewhat familiar with web development, and have played around with Android Studio before (used Java, not Kotlin). Looking forward to learning more about making mobile apps (especially more intricate and complex ones) and learning new languages like Kotlin.
+
+### Wesley
+I have some experience in web development, most of which comes from CS148 and CS156. I do not have any experience with mobile development. I am hoping to learn how to develop mobile apps in Kotlin.
