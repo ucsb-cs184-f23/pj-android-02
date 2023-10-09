@@ -6,3 +6,6 @@ I know a bit about web development and some AI applications. I know essentially 
 ### Hanson
 
 I have some experience in web development, mobile development using React Native, and embedded development. No experience in Kotlin or developing directly in the Android studio IDE which is what I hope to learn.
+
+### Luke
+I've done work with web development and UI testing/QC on iOS (XCUITest) and Android (Espresso) apps. I'm looking to learn more about building mobile apps using Kotlin.
