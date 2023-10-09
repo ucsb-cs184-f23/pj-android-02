@@ -9,3 +9,6 @@ I have some experience in web development, mobile development using React Native
 
 ### Luke
 I've done work with web development and UI testing/QC on iOS (XCUITest) and Android (Espresso) apps. I'm looking to learn more about building mobile apps using Kotlin.
+
+### Cyril
+I am somewhat familiar with web development, and have played around with Android Studio before (used Java, not Kotlin). Looking forward to learning more about making mobile apps (especially more intricate and complex ones) and learning new languages like Kotlin.
