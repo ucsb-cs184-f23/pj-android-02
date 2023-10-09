@@ -1,0 +1,1 @@
+My name is Wesley Kam and I am a 4th year computer science major. In terms of mobile development, I have quite literally 0 experience. I hope to learn Android development this quarter and create a functioning application.
