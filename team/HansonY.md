@@ -1,1 +1,1 @@
-Hi everyone, I am a fourth CS student with some experience in mobile development using React Native.
+Hi everyone, my name is Hanson Yu and I am a fourth CS student with some experience in mobile development using React Native as well as embedded development in C using the Zephyr RTOS for Bluetooth Low Energy applications.
