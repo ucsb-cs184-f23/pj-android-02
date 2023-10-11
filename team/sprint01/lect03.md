@@ -1,6 +1,6 @@
 Type of Meeting: Daily Scrum
 
-Team: Hanson Yu [x], Wesley Kam [x], Cyril Wang [x], Dylan Chung [x], Luke Li [x]
+Team: Dylan Chung [x], Hanson Yu [x], Wesley Kam [x], Cyril Wang [x], Luke Li [x]
 
 Scribed Discussion:
 
