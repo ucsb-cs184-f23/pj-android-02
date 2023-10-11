@@ -10,4 +10,4 @@ It's late at night and you want to order one or two items. It feels too far away
 
 ### As a deliverer:
 
-It's late at night and you're getting off work or you had the munchies and you happened to be at some grocery store. You check the bounty board before hopping in your car to see if you can make a few dollars on your way home. You see a bounty, select it, and buy the goods. You're on your way home and drop off the item and get paid for it.
+It's late at night and you're getting off work or you had the munchies and you happened to be at some store. You check the bounty board before hopping in your car to see if you can make a few dollars on your way home. You see a bounty, select it, and buy the goods. You're on your way home and drop off the item and get paid for it.
