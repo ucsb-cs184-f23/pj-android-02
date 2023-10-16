@@ -29,3 +29,9 @@ I have some experience in web development, most of which comes from CS148 and CS
 2. Since Kotlin is relatively new, there are fewer resources to learn from. Java has a much larger user base.
 3. All of us have to learn a new technology (little to no experience with Android and/or Kotlin)
 4. Deciding which version of Android to support (older but more universal vs. newer but less devices can run)
+
+# Learning Resources
+10/13/23 4:41 -> Hanson posted https://www.youtube.com/watch?v=BBWyXo-3JGQ
+10/16/23 1:23 -> Wesley posted https://www.youtube.com/watch?v=5flXf8nuq60
+10/16/23 1:54 -> Dylan posted https://www.youtube.com/watch?v=8I5gCLaS25w&ab_channel=tutorialsEU
+10/16/23 2:20 -> Cyril reacted to Kevin's post on Kotlin syntax
