@@ -25,3 +25,4 @@ I have some experience in web development, most of which comes from CS148 and CS
 
 ### Challenges
 1. Since Kotlin is relatively new, there are fewer resources to learn from. Java has a much larger user base.
+2. All of us have to learn a new technology
