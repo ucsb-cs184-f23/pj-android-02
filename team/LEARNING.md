@@ -16,7 +16,7 @@ I am somewhat familiar with web development, and have played around with Android
 ### Wesley
 I have some experience in web development, most of which comes from CS148 and CS156. I do not have any experience with mobile development. I am hoping to learn how to develop mobile apps in Kotlin.
 
-# Android / Kotlin Benefits and Challenges
+# Android / Kotlin Benefits and Challenges (discussed in lect05 - 10/16/23)
 
 ### Benefits
 1. Android Studio as an IDE (Streamlined UI design, Device emulator, etc...)
