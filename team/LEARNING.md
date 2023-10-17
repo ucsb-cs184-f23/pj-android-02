@@ -32,8 +32,12 @@ I have some experience in web development, most of which comes from CS148 and CS
 
 # Learning Resources
 
-10/13/23 4:41 -> Hanson posted https://www.youtube.com/watch?v=BBWyXo-3JGQ
+10/13/23 - Hanson posted https://www.youtube.com/watch?v=BBWyXo-3JGQ
 
-10/16/23 1:23 -> Wesley posted https://www.youtube.com/watch?v=5flXf8nuq60
+10/16/23 - Wesley posted https://www.youtube.com/watch?v=5flXf8nuq60
 
-10/16/23 1:54 -> Dylan posted https://www.youtube.com/watch?v=8I5gCLaS25w&ab_channel=tutorialsEU
+10/16/23 - Dylan posted https://www.youtube.com/watch?v=8I5gCLaS25w&ab_channel=tutorialsEU
+
+10/16/23 - Cyril liked Kevin's Kotlin resource (https://kotlinlang.org/docs/basic-syntax.html) and Jetpack Compose in Android Studio (https://www.youtube.com/watch?v=6_wK_Ud8--0)
+
+10/16/23 - Luke liked the above too, as well as Aaditya's android development article (https://www.geeksforgeeks.org/introduction-to-android-development/), Nathan's Android Studio article (https://developer.android.com/studio/intro), and Jake's Android basics article (https://developer.android.com/courses/android-basics-compose/course).
