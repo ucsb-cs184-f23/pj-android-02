@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "346620263049",
+    "project_id": "couch-potatoes-5068a",
+    "storage_bucket": "couch-potatoes-5068a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346620263049:android:135e9f05fbf475669aa458",
+        "android_client_info": {
+          "package_name": "com.couchpotatoes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "346620263049-2jb5j8gq8n26tmhiv2uqps9m45iktk1b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.couchpotatoes",
+            "certificate_hash": "27c250a8d17b4a9895e74024ba12d9b98b491332"
+          }
+        },
+        {
+          "client_id": "346620263049-egn59236t1ncv3fnoarff80np87su4o9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqyaEKKneAlx34cGAqyrdEQeYMxB4DtHw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "346620263049-egn59236t1ncv3fnoarff80np87su4o9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
