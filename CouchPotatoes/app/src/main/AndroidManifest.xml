@@ -31,6 +31,7 @@
         </activity>
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".RequestFormActivity" />
+        <activity android:name=".jobBoard.JobBoardActivity" />
     </application>
 
 </manifest>
