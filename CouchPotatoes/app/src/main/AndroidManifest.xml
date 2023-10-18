@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".UserProfileActivity" />
+        <activity android:name=".jobBoard.JobBoardActivity" />
     </application>
 
 </manifest>
