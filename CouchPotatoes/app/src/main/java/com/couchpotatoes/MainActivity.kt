@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

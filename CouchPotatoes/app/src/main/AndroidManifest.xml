@@ -13,15 +13,24 @@
         android:theme="@style/Theme.CouchPotatoes"
         tools:targetApi="31">
         <activity
+            android:name=".UserSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DasherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RequesterActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".UserProfileActivity" />
+        <activity android:name=".RequestFormActivity" />
         <activity android:name=".jobBoard.JobBoardActivity" />
     </application>
 
