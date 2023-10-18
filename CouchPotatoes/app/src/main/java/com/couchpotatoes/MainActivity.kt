@@ -21,9 +21,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //temporary solution to get user selection screen to show up on app launch, comment out the next 2 lines for the login screen to render
+        val intent = Intent(this, UserSelectionActivity::class.java)
+        startActivity(intent)
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
