@@ -2,28 +2,42 @@ package com.couchpotatoes
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.couchpotatoes.classes.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class UserProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
         auth = FirebaseAuth.getInstance()
+        database = Firebase.database.reference
 
         val userName = intent.getStringExtra("userName")
         val userEmail = intent.getStringExtra("userEmail")
 
         findViewById<TextView>(R.id.textViewUserName).text = userName
         findViewById<TextView>(R.id.textViewUserEmail).text = userEmail
+
+        // add user to database
+        // under their uid (can improve later, easy solution for now)
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+        // create user
+        val user = User(userName, userEmail)
+        // add to database
+        database.child("users").child(userId).setValue(user)
 
         // Find the logout button and add a click listener
         findViewById<Button>(R.id.logoutButton).setOnClickListener {
