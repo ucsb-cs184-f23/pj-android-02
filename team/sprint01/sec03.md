@@ -1,4 +1,4 @@
-Meeting Time: sec02.md
+Meeting Time: sec03.md
 
 Type of Meeting: Daily Scrum
 
