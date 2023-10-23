@@ -2,6 +2,8 @@ package com.couchpotatoes
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,9 +15,20 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class UserProfileActivity : AppCompatActivity() {
+class UserProfileActivity : AppCompatActivity(), GestureDetector.OnGestureListener {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
+
+    lateinit var gestureDetector: GestureDetector
+
+    var x2:Float = 0.0f
+    var x1:Float = 0.0f
+    var y2:Float = 0.0f
+    var y1:Float = 0.0f
+
+    companion object {
+        const val MIN_DISTANCE = 150
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,5 +71,61 @@ class UserProfileActivity : AppCompatActivity() {
                 finish()
             }
         }
+
+        gestureDetector = GestureDetector(this, this)
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event != null) {
+            gestureDetector.onTouchEvent(event)
+        }
+
+        when (event?.action) {
+            0-> {
+                x1 = event.x
+                y1 = event.y
+            }
+
+            1 -> {
+                x2 = event.x
+                y2 = event.y
+
+                val valueX:Float = x2-x1
+                val valueY:Float = y2-y1
+
+                if (kotlin.math.abs(valueX) > MIN_DISTANCE) {
+                    if (x1 > x2) {
+                        val intent = Intent(this, RequestFormActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+
+            }
+        }
+
+        return super.onTouchEvent(event)
+    }
+
+    override fun onDown(p0: MotionEvent): Boolean {
+        return false
+    }
+
+    override fun onShowPress(p0: MotionEvent) {
+    }
+
+    override fun onSingleTapUp(p0: MotionEvent): Boolean {
+        return false
+    }
+
+    override fun onScroll(p0: MotionEvent, p1: MotionEvent, p2: Float, p3: Float): Boolean {
+        return false
+
+    }
+
+    override fun onLongPress(p0: MotionEvent) {
+    }
+
+    override fun onFling(p0: MotionEvent, p1: MotionEvent, p2: Float, p3: Float): Boolean {
+        return false
     }
 }
