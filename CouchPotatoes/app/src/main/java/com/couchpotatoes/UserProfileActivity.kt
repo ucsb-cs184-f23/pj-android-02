@@ -39,6 +39,11 @@ class UserProfileActivity : AppCompatActivity() {
         // add to database
         database.child("users").child(userId).setValue(user)
 
+        findViewById<Button>(R.id.requesterFormButton).setOnClickListener {
+            val intent = Intent(this, RequestFormActivity::class.java)
+            startActivity(intent)
+        }
+
         // Find the logout button and add a click listener
         findViewById<Button>(R.id.logoutButton).setOnClickListener {
             // Sign out from FirebaseAuth
