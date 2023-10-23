@@ -13,3 +13,5 @@ Wesley finished hw2
 Luke brainstormed what our UI should look like and will post images of what screens should look like
 
 Cyril worked on hw2 and updated the ReadMe
+
+Discussed whether to include various issues in the MVP.
