@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("Google sign-in", "signInWithCredential:success")
                     val user = auth.currentUser
                     // Start UserProfileActivity and pass the user's email and name
-                    val intent = Intent(this, UserProfileActivity::class.java).apply {
+                    val intent = Intent(this, HW2LandingPageActivity::class.java).apply {
                         putExtra("userName", user?.displayName)
                         putExtra("userEmail", user?.email)
                     }
