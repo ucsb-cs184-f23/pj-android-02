@@ -45,7 +45,7 @@
         android:id="@+id/navButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next page -->"
+        android:text="Request form -->"
         android:backgroundTint="@android:color/white"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
