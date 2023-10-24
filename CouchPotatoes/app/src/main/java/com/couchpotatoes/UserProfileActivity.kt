@@ -58,5 +58,12 @@ class UserProfileActivity : AppCompatActivity() {
                 finish()
             }
         }
+
+        // find navigation button
+        findViewById<Button>(R.id.navButton).setOnClickListener {
+            val intent = Intent(this, RequestFormActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }
