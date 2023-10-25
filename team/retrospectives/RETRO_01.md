@@ -1,8 +1,8 @@
 # Date of Retrospective: 10/20/23
 
 * Led by: Cyril Wang
-* Present: EVERYONE
-* Absent: NO ONE
+* Present: everyone
+* Absent: no one
 
 ## Action items
 
@@ -34,3 +34,8 @@ Advice:
 * Keep team focused and on-track
 * Let other team members speak first before giving your opinion
 
+## Retro Experiment Results
+
+At this moment, we haven't been able to test whether PRs are more descriptive or that issues are being closed properly, since it is a work in-progress and there haven't been a substantial amount of PRs made / merged yet, so will hold off on this for now.
+
+For the other experiment of taking time to discuss issues or future plans, I think that it has been helpful to allocate that time after standup to discuss, so that everyone is on the same page and it is easier for people to bring up issues or ideas when there is an open space for them to do so. Sometimes, there isn't anything to bring up, but we feel that it doesn't hurt to have this time, even if nothing is brought up. 
