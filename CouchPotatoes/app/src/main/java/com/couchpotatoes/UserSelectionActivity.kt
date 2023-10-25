@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.couchpotatoes.jobBoard.JobBoardActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
@@ -24,7 +25,7 @@ class UserSelectionActivity : AppCompatActivity() {
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
             database.child("users").child(userId).child("role").setValue("requester")
 
-            val intent = Intent(this, RequesterActivity::class.java)
+            val intent = Intent(this, RequestFormActivity::class.java)
             startActivity(intent)
         }
 
@@ -34,7 +35,7 @@ class UserSelectionActivity : AppCompatActivity() {
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
             database.child("users").child(userId).child("role").setValue("dasher")
 
-            val intent = Intent(this, DasherActivity::class.java)
+            val intent = Intent(this, JobBoardActivity::class.java)
             startActivity(intent)
         }
 

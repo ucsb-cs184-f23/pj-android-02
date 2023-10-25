@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //temporary solution to get user selection screen to show up on app launch, comment out the next 2 lines for the login screen to render
-        val intent = Intent(this, JobBoardActivity::class.java)
-        startActivity(intent)
+//        //temporary solution to get user selection screen to show up on app launch, comment out the next 2 lines for the login screen to render
+//        val intent = Intent(this, JobBoardActivity::class.java)
+//        startActivity(intent)
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
@@ -71,11 +71,12 @@ class MainActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("Google sign-in", "signInWithCredential:success")
                     val user = auth.currentUser
-                    // Start UserProfileActivity and pass the user's email and name
-                    val intent = Intent(this, UserProfileActivity::class.java).apply {
-                        putExtra("userName", user?.displayName)
-                        putExtra("userEmail", user?.email)
-                    }
+//                    // Start UserProfileActivity and pass the user's email and name
+//                    val intent = Intent(this, UserProfileActivity::class.java).apply {
+//                        putExtra("userName", user?.displayName)
+//                        putExtra("userEmail", user?.email)
+//                    }
+                    val intent = Intent(this, UserSelectionActivity::class.java)
                     startActivity(intent)
                 } else {
                     // If sign in fails, display a message to the user.
