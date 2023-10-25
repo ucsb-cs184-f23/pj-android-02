@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.couchpotatoes.jobBoard.JobBoardActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -25,6 +26,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //temporary solution to get user selection screen to show up on app launch, comment out the next 2 lines for the login screen to render
+        val intent = Intent(this, JobBoardActivity::class.java)
+        startActivity(intent)
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
