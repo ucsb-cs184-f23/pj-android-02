@@ -27,10 +27,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        //temporary solution to get user selection screen to show up on app launch, comment out the next 2 lines for the login screen to render
-//        val intent = Intent(this, JobBoardActivity::class.java)
-//        startActivity(intent)
-
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
