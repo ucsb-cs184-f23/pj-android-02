@@ -21,7 +21,7 @@ class RequestFormActivity : AppCompatActivity() {
         setContentView(R.layout.activity_request_form)
     }
 
-    fun submitbuttonHandler(view: View?) {
+    fun submitbuttonHandler(view: View) {
         //Decide what happens when the user clicks the submit button
         database = Firebase.database.reference
 
@@ -48,10 +48,5 @@ class RequestFormActivity : AppCompatActivity() {
         val jobId = UUID.randomUUID().toString()
 
         database.child("jobs").child(jobId).setValue(job)
-        println("submit")
     }
-
-
-
-
 }
