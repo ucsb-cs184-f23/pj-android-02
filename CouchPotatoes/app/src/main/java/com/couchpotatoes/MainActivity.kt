@@ -67,11 +67,7 @@ class MainActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("Google sign-in", "signInWithCredential:success")
                     val user = auth.currentUser
-//                    // Start UserProfileActivity and pass the user's email and name
-//                    val intent = Intent(this, UserProfileActivity::class.java).apply {
-//                        putExtra("userName", user?.displayName)
-//                        putExtra("userEmail", user?.email)
-//                    }
+
                     val intent = Intent(this, UserSelectionActivity::class.java)
                     startActivity(intent)
                 } else {
