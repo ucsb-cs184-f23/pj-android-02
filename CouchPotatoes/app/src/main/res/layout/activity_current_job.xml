@@ -14,70 +14,151 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.2"
         android:textSize="20sp"
-        android:text="Current Job" />
+        android:text="Current Job"
+        android:textStyle="bold"/>
 
-    <LinearLayout
-        android:id="@+id/detailsContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:spacing="10dp"
+    <androidx.cardview.widget.CardView
+        android:layout_width="326dp"
+        android:layout_height="250dp"
+        android:id="@+id/detailsCard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Requester Name -->
-        <TextView
-            android:id="@+id/requesterName"
+        <LinearLayout
+            android:id="@+id/detailsContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Requester Name: " />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:spacing="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4">
 
-        <!-- Requester Email -->
-        <TextView
-            android:id="@+id/requesterEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Requester Email: " />
+            <!-- Requester Name -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Requester Name: " />
+                <TextView
+                    android:id="@+id/requesterName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:text="Name"/>
+            </LinearLayout>
 
-        <!-- Item -->
-        <TextView
-            android:id="@+id/item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Item: " />
+            <!-- Requester Email -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Requester Email: " />
+                <TextView
+                    android:id="@+id/requesterEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:text="Email"/>
+            </LinearLayout>
 
-        <!-- Price -->
-        <TextView
-            android:id="@+id/price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Price: " />
+            <!-- Item -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Item: " />
+                <TextView
+                    android:id="@+id/item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:text="Item"/>
+            </LinearLayout>
 
-        <!-- Store -->
-        <TextView
-            android:id="@+id/store"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Store: " />
+            <!-- Price -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price: " />
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:text="Price"/>
+            </LinearLayout>
 
-        <!-- Delivery Address -->
-        <TextView
-            android:id="@+id/deliveryAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delivery Address: " />
+            <!-- Store -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Store: " />
+                <TextView
+                    android:id="@+id/store"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:text="Store"/>
+            </LinearLayout>
 
-        <!-- Status -->
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Status: " />
-    </LinearLayout>
+            <!-- Delivery Address -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delivery Address: " />
+                <TextView
+                    android:id="@+id/deliveryAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:text="Delivery Address"/>
+            </LinearLayout>
+
+            <!-- Status -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status: " />
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:text="Status"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/emptyView"

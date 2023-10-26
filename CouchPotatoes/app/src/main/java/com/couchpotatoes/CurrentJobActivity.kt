@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import com.couchpotatoes.classes.Job
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -25,7 +26,7 @@ class CurrentJobActivity : AppCompatActivity() {
 
         val user = FirebaseAuth.getInstance().currentUser
 
-        findViewById<LinearLayout>(R.id.detailsContainer).visibility = View.GONE
+        findViewById<CardView>(R.id.detailsCard).visibility = View.GONE
         findViewById<TextView>(R.id.emptyView).visibility = View.VISIBLE
 
         // First, get the currentJob for the user
@@ -35,14 +36,14 @@ class CurrentJobActivity : AppCompatActivity() {
                 // Now, get the job details using the currentJob
                 database.child("jobs").child(currentJob).get().addOnSuccessListener { jobSnapshot ->
                     val job = jobSnapshot.getValue(Job::class.java)
-                    findViewById<TextView>(R.id.requesterName).text = "Requester Name: " + job?.requesterName
-                    findViewById<TextView>(R.id.requesterEmail).text = "Requester Email: " + job?.requesterEmail
-                    findViewById<TextView>(R.id.item).text = "Item: " + job?.item
-                    findViewById<TextView>(R.id.price).text = "Price: " + job?.price
-                    findViewById<TextView>(R.id.store).text = "Store: " + job?.store
-                    findViewById<TextView>(R.id.deliveryAddress).text = "Delivery Address: " + job?.deliveryAddress
-                    findViewById<TextView>(R.id.status).text = "Status: " + job?.status
-                    findViewById<LinearLayout>(R.id.detailsContainer).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.requesterName).text = job?.requesterName
+                    findViewById<TextView>(R.id.requesterEmail).text = job?.requesterEmail
+                    findViewById<TextView>(R.id.item).text = job?.item
+                    findViewById<TextView>(R.id.price).text = job?.price
+                    findViewById<TextView>(R.id.store).text = job?.store
+                    findViewById<TextView>(R.id.deliveryAddress).text = job?.deliveryAddress
+                    findViewById<TextView>(R.id.status).text = job?.status
+                    findViewById<CardView>(R.id.detailsCard).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.emptyView).visibility = View.GONE
                 }.addOnFailureListener {
                     findViewById<TextView>(R.id.emptyView).visibility = View.VISIBLE
