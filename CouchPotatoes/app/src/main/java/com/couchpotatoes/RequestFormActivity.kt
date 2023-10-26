@@ -19,7 +19,10 @@ class RequestFormActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_form)
+    }
 
+    fun submitbuttonHandler(view: View) {
+        //Decide what happens when the user clicks the submit button
         database = Firebase.database.reference
 
         val whatEditText = findViewById<View>(R.id.what) as EditText
@@ -46,13 +49,4 @@ class RequestFormActivity : AppCompatActivity() {
 
         database.child("jobs").child(jobId).setValue(job)
     }
-
-    fun submitbuttonHandler(view: View?) {
-        //Decide what happens when the user clicks the submit button
-        println("submit")
-    }
-
-
-
-
 }
