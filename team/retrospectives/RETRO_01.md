@@ -36,6 +36,8 @@ Advice:
 
 ## Retro Experiment Results
 
-At this moment, we haven't been able to test whether PRs are more descriptive or that issues are being closed properly, since it is a work in-progress and there haven't been a substantial amount of PRs made / merged yet, so will hold off on this for now.
+For closing issues when they're done, we found that linking the issue in the pull request made it much easier to keep the kanban board clean, so we agreed that it should be standard practice to always link the issue in the pr. 
+
+We could have done a better job in writing issue descriptions, perhaps it may be prudent to do so during sprint planning or whenever the issues are created, mainly so that we have a plan when we start the issue. PR descriptions have been helpful in knowing what changes have been made, so will continue emphasizing that going forward.
 
 For the other experiment of taking time to discuss issues or future plans, I think that it has been helpful to allocate that time after standup to discuss, so that everyone is on the same page and it is easier for people to bring up issues or ideas when there is an open space for them to do so. Sometimes, there isn't anything to bring up, but we feel that it doesn't hurt to have this time, even if nothing is brought up. 
