@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.couchpotatoes"
-        minSdk = 30
+        minSdk = 31
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -42,7 +42,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.firebase:firebase-analytics-ktx")
-
+    implementation("androidx.core:core-splashscreen:1.0.0-beta02")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")

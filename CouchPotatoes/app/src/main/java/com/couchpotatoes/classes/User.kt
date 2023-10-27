@@ -9,6 +9,7 @@ data class User(
     val role: String? = null,
     val address: String? = null,
     val rating: Double? = null,
-    val paymentInfo: String? = null
+    val paymentInfo: String? = null,
+    val currentJob: String? = null
     ) {
 }
