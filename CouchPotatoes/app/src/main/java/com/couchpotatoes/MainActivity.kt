@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.couchpotatoes.jobBoard.JobBoardActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -73,11 +74,8 @@ class MainActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("Google sign-in", "signInWithCredential:success")
                     val user = auth.currentUser
-                    // Start UserProfileActivity and pass the user's email and name
-                    val intent = Intent(this, UserProfileActivity::class.java).apply {
-                        putExtra("userName", user?.displayName)
-                        putExtra("userEmail", user?.email)
-                    }
+
+                    val intent = Intent(this, UserSelectionActivity::class.java)
                     startActivity(intent)
                 } else {
                     // If sign in fails, display a message to the user.
