@@ -1,22 +1,36 @@
 package com.couchpotatoes.jobBoard
 
 import android.content.Intent
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.couchpotatoes.R
+import com.couchpotatoes.classes.Job
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
-class JobBoardAdapter : RecyclerView.Adapter<JobBoardAdapter.ViewHolder>() {
 
-    private val jobList = arrayListOf<String>("Job 1", "Job 2", "Job 3", "Job 4")
+class JobBoardAdapter (private val jobList: ArrayList<Job>) : RecyclerView.Adapter<JobBoardAdapter.ViewHolder>() {
+    private var itemCount = jobList.size
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView
+        lateinit var job: Job
 
         init {
             // Define click listener for the ViewHolder's View
             textView = view.findViewById(R.id.job_item)
+            textView.setOnClickListener {
+                val intent = Intent(textView.context, JobItemActivity::class.java).apply {
+                    putExtra("job", job)
+                }
+                textView.context.startActivity(intent)
+            }
         }
     }
 
@@ -31,12 +45,16 @@ class JobBoardAdapter : RecyclerView.Adapter<JobBoardAdapter.ViewHolder>() {
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        viewHolder.job = jobList[position]
+
+        // basic information to display on job card
+        val display = "Requester: ${jobList[position].requesterName.toString()} \nItem: ${jobList[position].item.toString()} \nStore: ${jobList[position].store.toString()}"
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.textView.text = jobList[position]
+        viewHolder.textView.text = display
     }
 
     // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = 4
+    override fun getItemCount() = itemCount
 }
