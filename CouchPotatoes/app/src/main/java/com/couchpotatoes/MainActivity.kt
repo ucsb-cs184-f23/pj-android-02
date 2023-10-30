@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("Google sign-in", "signInWithCredential:success")
                     val user = auth.currentUser
 
-                    val intent = Intent(this, UserSelectionActivity::class.java)
+                    val intent = Intent(this, CurrentJobActivity::class.java)
                     startActivity(intent)
                 } else {
                     // If sign in fails, display a message to the user.
