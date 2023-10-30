@@ -16,12 +16,6 @@
             android:name=".UserSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".DasherActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RequesterActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

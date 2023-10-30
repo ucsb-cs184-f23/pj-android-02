@@ -2,6 +2,7 @@ package com.couchpotatoes
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -45,6 +46,35 @@ class CurrentJobActivity : AppCompatActivity() {
                     findViewById<TextView>(R.id.status).text = job?.status
                     findViewById<CardView>(R.id.detailsCard).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.emptyView).visibility = View.GONE
+
+                    val cancelButton = findViewById<Button>(R.id.cancel)
+                    val completeButton = findViewById<Button>(R.id.complete)
+
+                    if (user.email == job?.requesterEmail) { // You are the requester
+                        cancelButton.setOnClickListener {
+                            database.child("jobs").child(currentJob).removeValue()
+                            database.child("users").child(user!!.uid).child("currentJob").removeValue()
+                            recreate()
+                        }
+                        completeButton.setOnClickListener {
+                            database.child("jobs").child(currentJob).child("status").setValue("complete")
+                            database.child("users").child(user!!.uid).child("currentJob").removeValue()
+                            recreate()
+                        }
+                    } else { // You are the dasher
+                        cancelButton.setOnClickListener {
+                            database.child("jobs").child(currentJob).child("requesterEmail").setValue(null)
+                            database.child("jobs").child(currentJob).child("requesterName").setValue(null)
+                            database.child("users").child(user!!.uid).child("currentJob").removeValue()
+                            recreate()
+                        }
+                        completeButton.setOnClickListener {
+                            database.child("jobs").child(currentJob).child("status").setValue("complete")
+                            database.child("users").child(user!!.uid).child("currentJob").removeValue()
+                            recreate()
+                        }
+                    }
+
                 }.addOnFailureListener {
                     findViewById<TextView>(R.id.emptyView).visibility = View.VISIBLE
                 }
