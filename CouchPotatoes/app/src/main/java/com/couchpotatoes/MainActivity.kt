@@ -12,11 +12,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.couchpotatoes.jobBoard.JobBoardActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.couchpotatoes.classes.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>
 
 
@@ -36,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+        database = Firebase.database.reference
 
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -73,7 +79,16 @@ class MainActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("Google sign-in", "signInWithCredential:success")
-                    val user = auth.currentUser
+                    val currentUser = auth.currentUser
+
+                    // add user to database
+                    // under their uid (can improve later, easy solution for now)
+                    val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+                    // create user
+                    val user = User(currentUser?.displayName, currentUser?.email)
+                    // add to database
+                    database.child("users").child(userId).setValue(user)
 
                     val intent = Intent(this, UserSelectionActivity::class.java)
                     startActivity(intent)
