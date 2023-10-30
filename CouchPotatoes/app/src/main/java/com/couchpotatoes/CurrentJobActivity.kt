@@ -63,8 +63,6 @@ class CurrentJobActivity : AppCompatActivity() {
                         }
                     } else { // You are the dasher
                         cancelButton.setOnClickListener {
-                            database.child("jobs").child(currentJob).child("requesterEmail").setValue(null)
-                            database.child("jobs").child(currentJob).child("requesterName").setValue(null)
                             database.child("users").child(user!!.uid).child("currentJob").removeValue()
                             recreate()
                         }
