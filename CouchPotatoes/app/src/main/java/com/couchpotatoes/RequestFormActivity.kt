@@ -34,8 +34,12 @@ class RequestFormActivity : AppCompatActivity() {
         val addressEditText = findViewById<View>(R.id.address) as EditText
         val address = addressEditText.text.toString()
 
+        // switch to better system later
+        val jobId = UUID.randomUUID().toString()
+
         // create job
         val job = Job(
+            jobId,
             FirebaseAuth.getInstance().currentUser!!.displayName,
             FirebaseAuth.getInstance().currentUser!!.email,
             what,
@@ -43,9 +47,6 @@ class RequestFormActivity : AppCompatActivity() {
             where,
             address,
             "pending")
-
-        // switch to better system later
-        val jobId = UUID.randomUUID().toString()
 
         database.child("jobs").child(jobId).setValue(job)
     }

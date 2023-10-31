@@ -58,6 +58,10 @@ class JobBoardActivity : AppCompatActivity() {
                         if (data.key.toString() == "store") {
                             job.store = data.value.toString()
                         }
+
+                        if (data.key.toString() == "uid") {
+                            job.uid = data.value.toString()
+                        }
                     }
                     jobList.add(job)
                 }
