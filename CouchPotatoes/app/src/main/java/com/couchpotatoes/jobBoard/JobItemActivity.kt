@@ -1,7 +1,7 @@
 package com.couchpotatoes.jobBoard
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
@@ -11,7 +11,6 @@ import com.couchpotatoes.classes.Job
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.util.ArrayList
 
 
 class JobItemActivity : AppCompatActivity() {
@@ -36,8 +35,13 @@ class JobItemActivity : AppCompatActivity() {
     }
 
     fun acceptButtonHandler(view: View) {
+        // Change the job's status from "pending" to "accepted"
         database = Firebase.database.reference
-//        Log.i("TAG", "uid: ${job.uid}")
         database.child("jobs").child(job.uid.toString()).child("status").setValue("accepted")
+
+        // TODO: For now, accept button navigate to Job Board to accept new jobs (plus it shows that accepted jobs are no on th job board)
+        //      We probably want it to navigate to current job or something
+        val intent = Intent(this, JobBoardActivity::class.java)
+        startActivity(intent)
     }
 }
