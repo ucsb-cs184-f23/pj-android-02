@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.Button
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val signInButton: com.google.android.gms.common.SignInButton = findViewById(R.id.sign_in_button)
+        val signInButton: Button = findViewById(R.id.sign_in_button)
         signInButton.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             signInLauncher.launch(signInIntent)
