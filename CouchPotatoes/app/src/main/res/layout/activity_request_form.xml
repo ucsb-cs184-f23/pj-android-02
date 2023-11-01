@@ -35,7 +35,6 @@
             android:id="@+id/what_field"
             android:layout_width="350dp"
             android:layout_height="50dp"
-            android:background="@drawable/shadow_183822_9"
             android:text="Requester"
             android:textSize="35sp"
             app:cardCornerRadius="30dp"
