@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/beige"
     android:textAlignment="center">
-
 
     <TextView
         android:id="@+id/title"
@@ -13,69 +12,115 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:text="Request Form"
-        android:textColor="#03A9F4"
+        android:textColor="#006666"
         android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/what"
-        android:layout_width="311dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="160dp"
-        android:ems="10"
-        android:hint="What you want"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/where"
-        android:layout_width="311dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="Where you want it from"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/what" />
-
-    <EditText
-        android:id="@+id/cost"
-        android:layout_width="311dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="Cost for job"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/where" />
-
-    <EditText
-        android:id="@+id/address"
-        android:layout_width="311dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="Address for delivery"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cost" />
-
-    <Button
-        android:id="@+id/button"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="#03A9F4"
-        android:onClick="submitbuttonHandler"
-        android:text="SUBMIT"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        android:divider="@drawable/linear_layout_divider"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/address" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/what_field"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:text="Requester"
+            android:textSize="35sp"
+            app:cardCornerRadius="30dp"
+            >
+
+            <EditText
+                android:id="@+id/what"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:ems="10"
+                android:hint="What you want"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/where_field"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:text="Requester"
+            android:textSize="35sp"
+            app:cardCornerRadius="30dp">
+
+            <EditText
+                android:id="@+id/where"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:ems="10"
+                android:hint="Where you want it from"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cost_field"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:text="Requester"
+            android:textSize="35sp"
+            app:cardCornerRadius="30dp">
+
+            <EditText
+                android:id="@+id/cost"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:ems="10"
+                android:hint="Cost of job"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/address_field"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:text="Requester"
+            android:textSize="35sp"
+            app:cardCornerRadius="30dp">
+
+            <EditText
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:ems="10"
+                android:hint="Where you want it from"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"/>
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#006666"
+            android:onClick="submitbuttonHandler"
+            android:text="SUBMIT"/>
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
