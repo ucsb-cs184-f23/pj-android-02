@@ -42,8 +42,7 @@ class JobItemActivity : AppCompatActivity() {
         database = Firebase.database.reference
         database.child("jobs").child(job.uid.toString()).child("status").setValue("accepted")
 
-        // TODO: For now, accept button navigate to Job Board to accept new jobs (plus it shows that accepted jobs are no on the job board)
-        //      We probably want it to navigate to current job or something
+        // Add the job to the user's current job
         auth = FirebaseAuth.getInstance()
         database = Firebase.database.reference
 
@@ -51,6 +50,7 @@ class JobItemActivity : AppCompatActivity() {
 
         database.child("users").child(user!!.uid).child("currentJob").setValue(job.uid.toString())
 
+        // Redirect to Current Job Page
         val intent = Intent(this, CurrentJobActivity::class.java)
         startActivity(intent)
     }

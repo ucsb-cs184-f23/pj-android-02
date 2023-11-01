@@ -31,7 +31,7 @@ class JobBoardActivity : AppCompatActivity() {
                 for (ds in dataSnapshot.children) {
                     val job = Job()
                     if (ds.child("status").getValue<String?>().toString() == "pending") {
-                        // unoptimized solution for now
+                        // Pass job details to Job Board Adapter to create the Job Board List
                         job.deliveryAddress = ds.child("deliveryAddress").getValue<String?>().toString()
                         job.status = ds.child("status").getValue<String?>().toString()
                         job.requesterName = ds.child("requesterName").getValue<String?>().toString()

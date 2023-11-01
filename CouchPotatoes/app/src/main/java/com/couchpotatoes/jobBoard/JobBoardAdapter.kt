@@ -23,6 +23,7 @@ class JobBoardAdapter (private val jobList: ArrayList<Job>) : RecyclerView.Adapt
             textView = view.findViewById(R.id.job_item)
         }
 
+        // Give functionality to more details button
         init {
             val moreDetailsButton = view.findViewById<Button>(R.id.moreDetailsButton)
             moreDetailsButton.setOnClickListener {
