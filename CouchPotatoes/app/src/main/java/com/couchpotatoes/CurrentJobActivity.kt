@@ -90,6 +90,7 @@ class CurrentJobActivity : AppCompatActivity() {
                                 dialogBuilder.setMessage("Are you sure you want to cancel this job?")
                                     .setPositiveButton("Yes") { _, _ ->
                                         database.child("users").child(user!!.uid).child("currentJob").setValue(null)
+                                        database.child("jobs").child(currentJob).setValue("pending")
                                         recreate()
                                     }
                                     .setNegativeButton("No", null)
