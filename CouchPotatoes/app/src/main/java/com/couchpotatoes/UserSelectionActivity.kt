@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import com.couchpotatoes.jobBoard.JobBoardActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -19,7 +20,7 @@ class UserSelectionActivity : AppCompatActivity() {
 
         database = Firebase.database.reference
 
-        val requesterButton = findViewById<Button>(R.id.requesterButton)
+        val requesterButton = findViewById<CardView>(R.id.requesterButton)
         requesterButton.setOnClickListener {
             // set user role to requester
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
@@ -29,7 +30,7 @@ class UserSelectionActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val dasherButton = findViewById<Button>(R.id.dasherButton)
+        val dasherButton = findViewById<CardView>(R.id.HustlerButton)
         dasherButton.setOnClickListener {
             // set user role to dasher
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
