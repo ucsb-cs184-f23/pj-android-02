@@ -6,14 +6,17 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import com.couchpotatoes.CurrentJobActivity
 import com.couchpotatoes.R
 import com.couchpotatoes.classes.Job
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 
 class JobItemActivity : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var job: Job
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +42,16 @@ class JobItemActivity : AppCompatActivity() {
         database = Firebase.database.reference
         database.child("jobs").child(job.uid.toString()).child("status").setValue("accepted")
 
-        // TODO: For now, accept button navigate to Job Board to accept new jobs (plus it shows that accepted jobs are no on th job board)
+        // TODO: For now, accept button navigate to Job Board to accept new jobs (plus it shows that accepted jobs are no on the job board)
         //      We probably want it to navigate to current job or something
-        val intent = Intent(this, JobBoardActivity::class.java)
+        auth = FirebaseAuth.getInstance()
+        database = Firebase.database.reference
+
+        val user = FirebaseAuth.getInstance().currentUser
+
+        database.child("users").child(user!!.uid).child("currentJob").setValue(job.uid.toString())
+
+        val intent = Intent(this, CurrentJobActivity::class.java)
         startActivity(intent)
     }
 }
