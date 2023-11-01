@@ -11,9 +11,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.util.Arrays
 
 class JobBoardActivity : AppCompatActivity() {
 
@@ -30,36 +30,18 @@ class JobBoardActivity : AppCompatActivity() {
                 var jobList = ArrayList<Job>()
                 for (ds in dataSnapshot.children) {
                     val job = Job()
-                    for (data in ds.children) {
-                        // unoptimized solution for now
-                        if (data.key.toString() == "deliveryAddress") {
-                            job.deliveryAddress = data.value.toString()
-                        }
-
-                        if (data.key.toString() == "status") {
-                            job.status = data.value.toString()
-                        }
-
-                        if (data.key.toString() == "requesterName") {
-                            job.requesterName = data.value.toString()
-                        }
-
-                        if (data.key.toString() == "requesterEmail") {
-                            job.requesterEmail = data.value.toString()
-                        }
-
-                        if (data.key.toString() == "item") {
-                            job.item = data.value.toString()
-                        }
-
-                        if (data.key.toString() == "price") {
-                            job.price = data.value.toString()
-                        }
-                        if (data.key.toString() == "store") {
-                            job.store = data.value.toString()
-                        }
+                    if (ds.child("status").getValue<String?>().toString() == "pending") {
+                        // Pass job details to Job Board Adapter to create the Job Board List
+                        job.deliveryAddress = ds.child("deliveryAddress").getValue<String?>().toString()
+                        job.status = ds.child("status").getValue<String?>().toString()
+                        job.requesterName = ds.child("requesterName").getValue<String?>().toString()
+                        job.requesterEmail = ds.child("requesterEmail").getValue<String?>().toString()
+                        job.item = ds.child("item").getValue<String?>().toString()
+                        job.price = ds.child("price").getValue<String?>().toString()
+                        job.store = ds.child("store").getValue<String?>().toString()
+                        job.uid = ds.child("uid").getValue<String?>().toString()
+                        jobList.add(job)
                     }
-                    jobList.add(job)
                 }
 
                 val recycleView = findViewById<RecyclerView>(R.id.job_recycler_view)

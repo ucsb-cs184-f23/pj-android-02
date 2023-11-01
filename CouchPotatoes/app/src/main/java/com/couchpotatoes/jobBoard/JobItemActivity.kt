@@ -1,20 +1,28 @@
 package com.couchpotatoes.jobBoard
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import com.couchpotatoes.CurrentJobActivity
 import com.couchpotatoes.R
 import com.couchpotatoes.classes.Job
-import java.util.ArrayList
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 
 class JobItemActivity : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
+    private lateinit var job: Job
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_job_item)
-        val job = intent.getSerializableExtra("job") as Job
+        job = intent.getSerializableExtra("job") as Job
 
         val arrayAdapter: ArrayAdapter<*>
         val users = arrayOf(
@@ -27,5 +35,23 @@ class JobItemActivity : AppCompatActivity() {
         arrayAdapter = ArrayAdapter(this,
             android.R.layout.simple_list_item_1, users)
         mListView.adapter = arrayAdapter
+    }
+
+    fun acceptButtonHandler(view: View) {
+        // Change the job's status from "pending" to "accepted"
+        database = Firebase.database.reference
+        database.child("jobs").child(job.uid.toString()).child("status").setValue("accepted")
+
+        // Add the job to the user's current job
+        auth = FirebaseAuth.getInstance()
+        database = Firebase.database.reference
+
+        val user = FirebaseAuth.getInstance().currentUser
+
+        database.child("users").child(user!!.uid).child("currentJob").setValue(job.uid.toString())
+
+        // Redirect to Current Job Page
+        val intent = Intent(this, CurrentJobActivity::class.java)
+        startActivity(intent)
     }
 }
