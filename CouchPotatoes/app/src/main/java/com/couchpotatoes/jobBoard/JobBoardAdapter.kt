@@ -1,18 +1,14 @@
 package com.couchpotatoes.jobBoard
 
 import android.content.Intent
-import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.couchpotatoes.R
 import com.couchpotatoes.classes.Job
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 
 
 class JobBoardAdapter (private val jobList: ArrayList<Job>) : RecyclerView.Adapter<JobBoardAdapter.ViewHolder>() {
@@ -25,7 +21,12 @@ class JobBoardAdapter (private val jobList: ArrayList<Job>) : RecyclerView.Adapt
         init {
             // Define click listener for the ViewHolder's View
             textView = view.findViewById(R.id.job_item)
-            textView.setOnClickListener {
+        }
+
+        // Give functionality to more details button
+        init {
+            val moreDetailsButton = view.findViewById<Button>(R.id.moreDetailsButton)
+            moreDetailsButton.setOnClickListener {
                 val intent = Intent(textView.context, JobItemActivity::class.java).apply {
                     putExtra("job", job)
                 }

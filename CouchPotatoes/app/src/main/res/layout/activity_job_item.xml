@@ -8,8 +8,22 @@
 
     <ListView
         android:id="@+id/job_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
+        android:layout_width="420dp"
+        android:layout_height="532dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ListView>
+
+    <Button
+        android:id="@+id/acceptButton"
+        android:layout_width="217dp"
+        android:layout_height="89dp"
+        android:text="Accept"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/job_list"
+        android:onClick="acceptButtonHandler"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
