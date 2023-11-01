@@ -16,14 +16,17 @@
 
     <Button
         android:id="@+id/acceptButton"
-        android:layout_width="217dp"
-        android:layout_height="89dp"
+        android:layout_width="128dp"
+        android:layout_height="58dp"
+        android:onClick="acceptButtonHandler"
         android:text="Accept"
+        android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/job_list"
-        android:onClick="acceptButtonHandler"/>
+        app:layout_constraintVertical_bias="0.156" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
