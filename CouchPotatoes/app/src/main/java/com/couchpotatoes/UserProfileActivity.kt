@@ -9,7 +9,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 
-class UserProfileActivity : AppCompatActivity() {
+class UserProfileActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +17,8 @@ class UserProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user_profile)
 
         auth = FirebaseAuth.getInstance()
+
+        createNavMenu(R.id.my_toolbar, this, auth)
 
         val userName = intent.getStringExtra("userName")
         val userEmail = intent.getStringExtra("userEmail")

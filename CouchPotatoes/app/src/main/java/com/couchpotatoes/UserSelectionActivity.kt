@@ -12,13 +12,17 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 
-class UserSelectionActivity : AppCompatActivity() {
+class UserSelectionActivity : BaseActivity() {
     private lateinit var database: DatabaseReference
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_selection)
 
         database = Firebase.database.reference
+        auth = FirebaseAuth.getInstance()
+
+        createNavMenu(R.id.my_toolbar, this, auth)
 
         val requesterButton = findViewById<CardView>(R.id.requesterButton)
         requesterButton.setOnClickListener {
