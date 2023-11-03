@@ -14,7 +14,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class CurrentJobActivity : AppCompatActivity() {
+class CurrentJobActivity : BaseActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
@@ -25,6 +25,8 @@ class CurrentJobActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         database = Firebase.database.reference
+
+        createNavMenu(R.id.my_toolbar, this, auth)
 
         val user = FirebaseAuth.getInstance().currentUser
 

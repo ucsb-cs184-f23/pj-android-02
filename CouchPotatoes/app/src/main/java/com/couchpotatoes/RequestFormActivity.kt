@@ -13,12 +13,17 @@ import com.google.firebase.database.ktx.database
 import java.util.UUID
 
 
-class RequestFormActivity : AppCompatActivity() {
+class RequestFormActivity : BaseActivity() {
     private lateinit var database: DatabaseReference
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_form)
+
+        auth = FirebaseAuth.getInstance()
+
+        createNavMenu(R.id.my_toolbar, this, auth)
     }
 
     fun submitbuttonHandler(view: View) {

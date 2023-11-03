@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import com.couchpotatoes.BaseActivity
 import com.couchpotatoes.CurrentJobActivity
 import com.couchpotatoes.R
 import com.couchpotatoes.classes.Job
@@ -15,13 +16,17 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 
-class JobItemActivity : AppCompatActivity() {
+class JobItemActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var job: Job
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_job_item)
+
+        auth = FirebaseAuth.getInstance()
+        createNavMenu(R.id.my_toolbar, this, auth)
+
         job = intent.getSerializableExtra("job") as Job
 
         val arrayAdapter: ArrayAdapter<*>
