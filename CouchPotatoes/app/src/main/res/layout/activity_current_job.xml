@@ -165,6 +165,7 @@
                     android:id="@+id/cancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/orange"
                     android:layout_weight="1"
                     android:text="Cancel"
                     android:layout_marginRight="10dp"/>
@@ -172,6 +173,7 @@
                     android:id="@+id/complete"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/orange"
                     android:layout_weight="1"
                     android:text="Complete"
                     android:layout_marginLeft="10dp"/>

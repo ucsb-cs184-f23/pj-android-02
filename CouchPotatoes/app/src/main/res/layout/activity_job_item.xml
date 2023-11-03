@@ -31,11 +31,12 @@
         android:layout_width="128dp"
         android:layout_height="58dp"
         android:onClick="acceptButtonHandler"
+        android:backgroundTint="@color/orange"
         android:text="Accept"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/job_list"
         app:layout_constraintVertical_bias="0.156" />
