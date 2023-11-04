@@ -6,7 +6,7 @@ Team: Dylan Chung [x], Hanson Yu [x], Wesley Kam [x], Cyril Wang [x], Luke Li [x
 
 Scribed Discussion:
 
-Hanson 
+Hanson reviewed the final changes for the MVP and found a few bugs
 
 Wesley
 
