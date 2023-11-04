@@ -8,7 +8,7 @@ Scribed Discussion:
 
 Hanson reviewed the final changes for the MVP and found a few bugs
 
-Wesley
+Wesley reviewed some PRs and will figure out installation things
 
 Cyril finished the navigation menu and did the tag and release for our MVP 
 
