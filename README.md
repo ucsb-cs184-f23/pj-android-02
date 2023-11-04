@@ -20,3 +20,12 @@ Our approach is to create a basic basic delivery app, where users can make reque
 Requesters - Users that can request for items to be picked up and delivered to them. These users can create requests / jobs in the app that the deliverers can see and accept. 
 
 Deliverers / "Hustlers" - Users that deliver the items to the requesters. These users can browse for open requests and accept the ones that are near to them. 
+
+## Deployment
+
+Download this APK file on an Android device and run it:
+https://files.slack.com/files-pri/T05UY7LRDDF-F064A2Q1F42/download/app-debug.apk?origin_team=T05UY7LRDDF
+
+This should automatically install the app
+
+NOTE: you may need to adjust permissions in your settings to allow the downloading of third-party apps
