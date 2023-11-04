@@ -23,8 +23,7 @@ Deliverers / "Hustlers" - Users that deliver the items to the requesters. These 
 
 ## Deployment
 
-Download this APK file on an Android device and run it:
-https://files.slack.com/files-pri/T05UY7LRDDF-F064A2Q1F42/download/app-debug.apk?origin_team=T05UY7LRDDF
+Download this APK file on an Android device and run it: [Couch Potatoes](https://files.slack.com/files-pri/T05UY7LRDDF-F064A2Q1F42/download/app-debug.apk?origin_team=T05UY7LRDDF)
 
 This should automatically install the app
 
