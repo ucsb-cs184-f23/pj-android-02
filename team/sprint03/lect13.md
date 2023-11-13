@@ -26,9 +26,13 @@ For hustlers:
 
 Parking Lot:
 
-Luke will review Cyril Evaluation
-Dylan will review Luke Implementation
-Cyril will review Dylan Documentation
-Wesley will review Hanson Implementation
+Luke will review Cyril (Evaluation)
+
+Dylan will review Luke (Implementation)
+
+Cyril will review Dylan (Documentation)
+
+Wesley will review Hanson (Implementation)
+
 Hanson will review Wesley Design
 
