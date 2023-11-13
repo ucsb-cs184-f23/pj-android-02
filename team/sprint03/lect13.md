@@ -9,3 +9,11 @@ Scribed Discussion:
 Everyone had a nice relaxing weekend.
 
 Wesley and Dylan worked on an issue together to deploy on an actual device.
+
+Parking Lot:
+
+Luke will review Cyril Evaluation
+Dylan will review Luke Implementation
+Cyril will review Dylan Documentation
+Wesley will review Hanson Implementation
+Hanson will review Wesley Design
