@@ -3,6 +3,7 @@ package com.couchpotatoes
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import co.zsmb.materialdrawerkt.builders.drawer
@@ -12,6 +13,9 @@ import com.couchpotatoes.jobBoard.JobBoardActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 open class BaseActivity : AppCompatActivity() {
     fun createNavMenu(id: Int, context: Context, auth: FirebaseAuth) {
@@ -20,74 +24,136 @@ open class BaseActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false);
         toolBar.setBackgroundColor(Color.parseColor("#00000000"));
 
-        drawer {
-            primaryItem("Home") {
-                onClick { _ ->
-                    val intent = Intent(context, UserSelectionActivity::class.java)
-                    startActivity(intent)
-                    false
-                }
-            }
-            primaryItem("User Profile") {
-                onClick { _ ->
-                    val currentUser = auth.currentUser
-                    val intent = Intent(context, UserProfileActivity::class.java).apply {
-                        putExtra("userName", currentUser?.displayName)
-                        putExtra("userEmail", currentUser?.email)
-                    }
-                    startActivity(intent)
-                    false
-                }
-            }
-            primaryItem("Current Job") {
-                onClick { _ ->
-                    val intent = Intent(context, CurrentJobActivity::class.java)
-                    startActivity(intent)
-                    false
-                }
-            }
-            primaryItem("Job Board") {
-                onClick { _ ->
-                    val intent = Intent(context, JobBoardActivity::class.java)
-                    startActivity(intent)
-                    false
-                }
-            }
+        // get user's role to filter what they can see
+        var database: DatabaseReference = Firebase.database.reference
+        database.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).child("role").get().addOnSuccessListener {
 
-            // put everything for now, will separate based on role later
-            primaryItem("Request Form") {
-                onClick { _ ->
-                    val intent = Intent(context, RequestFormActivity::class.java)
-                    startActivity(intent)
-                    false
-                }
-            }
-            footer {
-                primaryItem("Logout") {
-                    textColor = 0xFFFF0000
+            drawer {
+                primaryItem("Home") {
                     onClick { _ ->
-                        // Sign out from FirebaseAuth
-                        auth.signOut()
-
-                        // Sign out from GoogleSignInClient
-                        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                            .requestEmail()
-                            .build()
-                        val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                        googleSignInClient.signOut().addOnCompleteListener {
-                            // After signing out, redirect the user back to MainActivity
-                            val intent = Intent(context, MainActivity::class.java)
-                            // Clear the activity stack to prevent the user from navigating back to the profile activity
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            startActivity(intent)
-                        }
+                        val intent = Intent(context, UserSelectionActivity::class.java)
+                        startActivity(intent)
                         false
                     }
                 }
+                primaryItem("User Profile") {
+                    onClick { _ ->
+                        val currentUser = auth.currentUser
+                        val intent = Intent(context, UserProfileActivity::class.java).apply {
+                            putExtra("userName", currentUser?.displayName)
+                            putExtra("userEmail", currentUser?.email)
+                        }
+                        startActivity(intent)
+                        false
+                    }
+                }
+
+                if (it.value.toString() == "dasher") {
+                    primaryItem("Current Job") {
+                        onClick { _ ->
+                            val intent = Intent(context, CurrentJobActivity::class.java)
+                            startActivity(intent)
+                            false
+                        }
+                    }
+                    primaryItem("Job Board") {
+                        onClick { _ ->
+                            val intent = Intent(context, JobBoardActivity::class.java)
+                            startActivity(intent)
+                            false
+                        }
+                    }
+                }
+
+                if (it.value.toString() == "requester") {
+                    // put everything for now, will separate based on role later
+                    primaryItem("Request Form") {
+                        onClick { _ ->
+                            val intent = Intent(context, RequestFormActivity::class.java)
+                            startActivity(intent)
+                            false
+                        }
+                    }
+                }
+
+                footer {
+                    primaryItem("Logout") {
+                        textColor = 0xFFFF0000
+                        onClick { _ ->
+                            // Sign out from FirebaseAuth
+                            auth.signOut()
+
+                            // Sign out from GoogleSignInClient
+                            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestEmail()
+                                .build()
+                            val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                            googleSignInClient.signOut().addOnCompleteListener {
+                                // After signing out, redirect the user back to MainActivity
+                                val intent = Intent(context, MainActivity::class.java)
+                                // Clear the activity stack to prevent the user from navigating back to the profile activity
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                            }
+                            false
+                        }
+                    }
+                }
+
+                // use created toolbar for drawer
+                toolbar = toolBar
             }
 
-            // use created toolbar for drawer
-            toolbar = toolBar
+        }.addOnFailureListener{
+            drawer {
+                primaryItem("Home") {
+                    onClick { _ ->
+                        val intent = Intent(context, UserSelectionActivity::class.java)
+                        startActivity(intent)
+                        false
+                    }
+                }
+                primaryItem("User Profile") {
+                    onClick { _ ->
+                        val currentUser = auth.currentUser
+                        val intent = Intent(context, UserProfileActivity::class.java).apply {
+                            putExtra("userName", currentUser?.displayName)
+                            putExtra("userEmail", currentUser?.email)
+                        }
+                        startActivity(intent)
+                        false
+                    }
+                }
+
+                footer {
+                    primaryItem("Logout") {
+                        textColor = 0xFFFF0000
+                        onClick { _ ->
+                            // Sign out from FirebaseAuth
+                            auth.signOut()
+
+                            // Sign out from GoogleSignInClient
+                            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestEmail()
+                                .build()
+                            val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                            googleSignInClient.signOut().addOnCompleteListener {
+                                // After signing out, redirect the user back to MainActivity
+                                val intent = Intent(context, MainActivity::class.java)
+                                // Clear the activity stack to prevent the user from navigating back to the profile activity
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                            }
+                            false
+                        }
+                    }
+                }
+
+                // use created toolbar for drawer
+                toolbar = toolBar
+            }
         }
+
+
     }
 }
