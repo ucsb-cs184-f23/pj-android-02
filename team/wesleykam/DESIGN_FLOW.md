@@ -1,1 +1,1 @@
-![Design Flow](https://github.com/ucsb-cs184-f23/pj-android-02/assets/72772860/eea37672-35af-48dd-8730-06ae61994596)
+![Interaction Flow](https://github.com/ucsb-cs184-f23/pj-android-02/assets/72772860/d357f86a-7ffe-4886-8038-33442d2017af)
