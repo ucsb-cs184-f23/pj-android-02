@@ -1,7 +1,10 @@
 # Introduction:
 
-Brief description of the app, its purpose, and its target audience.
-Key features and benefits of the app.
+Couch Potatoes is a mobile app meant to simplify the user's ability to deliver goods, such as groceries, food, and other products, from stores on-demand and at a lower pricing than competing apps. Couch Potatoes is meant to be more convenient for both the deliverer and the requester.
+
+Prices for delivery are not set by some default or by stores but rather individual users. Additionally, deliverers are intended to already be at the store, or perhaps wanting to go to the store but unwilling to go just to buy themselves something. By using Couch Potatoes, dashers have incentive to do the things they want while making money.
+
+Requesters can request for any product from any location for a price that they set instead of the app. Dashers have access to a "bounty board"-like system that allows users to select jobs that they see as favorable.
 
 # System Requirements:
 
@@ -17,11 +20,6 @@ Steps for initial setup and account creation, if applicable.
 
 Overview of the app's start screen and main interface.
 Basic navigation instructions (how to swipe, tap, etc.).
-
-# User Interface Description:
-
-Description of the main screens and functions of the app.
-Explanation of icons, buttons, and gestures used for navigation.
 
 # Features and Functionality:
 
