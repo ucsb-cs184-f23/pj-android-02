@@ -1,0 +1,1 @@
+DESIGN_FLOW.md contains a image of the interation flow chart. It starts by lauching the app and then shows the different pages, user iteractions, and flow of the app based on the decisions made. Blue Ovals represent the different pages within the application. Gray diamonds represent the decisions that the user has to make. Red/Green boxes shows the decisions made.
