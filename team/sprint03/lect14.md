@@ -8,7 +8,7 @@ Scribed Discussion:
 
 Hanson is working on getting the expiration time slider set up in the request form and figuring out how to make jobs auto cancel when the time is up.
 
-Dylan worked on documentation and created a simple design document.
+Dylan approved a PR and created a simple design document.
 
 Luke started working on default info page.
 
