@@ -41,9 +41,8 @@ The second key feature, tied to requesters, is to request a job. From here, you 
 
 The third key feature, tied to hustlers, is to pick a job. There is a job bounty board that includes all available jobs. From here, you can select a job to see additional information. Once you are here, you can choose to select the job to complete.
 
-<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/490c530b-d51d-4875-abc8-3b5e110854ac">
 <img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/964b3c0f-94d7-486f-ae97-03435e0e9374">
-
+<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/490c530b-d51d-4875-abc8-3b5e110854ac">
 
 The fourth key feature is the ability to see your current job. From the current job page, both as a requester and hustler, you can see the current job you are assigned. From here, you can choose to cancel the job or complete the job. If you are a requester, cancelling the job will remove the job from the job board. If you are a hustler, cancelling the job will remove the current job from your current job page and return it to the bounty board. If you are completing the job, it will disappear from your current job page.
 
