@@ -34,5 +34,5 @@ Cyril will review Dylan (Documentation)
 
 Wesley will review Hanson (Implementation)
 
-Hanson will review Wesley Design
+Hanson will review Wesley (Design)
 
