@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                     // add to database
                     database.child("users").child(userId).setValue(user)
 
-                    val intent = Intent(this, UserSelectionActivity::class.java)
+                    val intent = Intent(this, UserSetupActivity::class.java)
                     startActivity(intent)
                 } else {
                     // If sign in fails, display a message to the user.

@@ -1,5 +1,6 @@
 package com.couchpotatoes
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -17,6 +18,8 @@ class RequestFormActivity : BaseActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
 
+    private var isAllFieldsChecked = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_form)
@@ -26,7 +29,7 @@ class RequestFormActivity : BaseActivity() {
         createNavMenu(R.id.my_toolbar, this, auth)
     }
 
-    fun submitbuttonHandler(view: View) {
+    fun submitButtonHandler(view: View) {
         //Decide what happens when the user clicks the submit button
         database = Firebase.database.reference
 
@@ -42,17 +45,52 @@ class RequestFormActivity : BaseActivity() {
         // switch to better system later
         val jobId = UUID.randomUUID().toString()
 
-        // create job
-        val job = Job(
-            jobId,
-            FirebaseAuth.getInstance().currentUser!!.displayName,
-            FirebaseAuth.getInstance().currentUser!!.email,
-            what,
-            cost,
-            where,
-            address,
-            "pending")
+        isAllFieldsChecked = checkAllFields()
 
-        database.child("jobs").child(jobId).setValue(job)
+        if (isAllFieldsChecked) {
+            // create job
+            val job = Job(
+                jobId,
+                FirebaseAuth.getInstance().currentUser!!.displayName,
+                FirebaseAuth.getInstance().currentUser!!.email,
+                what,
+                cost,
+                where,
+                address,
+                "pending")
+
+            database.child("jobs").child(jobId).setValue(job)
+        }
+    }
+
+    private fun checkAllFields(): Boolean {
+        var passed = true
+        val whatEditText = findViewById<EditText>(R.id.what)
+        val whereEditText = findViewById<EditText>(R.id.where)
+        val costEditText = findViewById<EditText>(R.id.cost)
+        val addressEditText = findViewById<EditText>(R.id.address)
+
+        if (whatEditText.length() === 0) {
+            whatEditText.error = "This Field is Required"
+            passed = false
+        }
+        if (whereEditText.length() === 0) {
+            whereEditText.error = "This Field is Required"
+            passed = false
+        }
+        if (costEditText.length() === 0) {
+            costEditText.error = "This Field is Required"
+            passed = false
+        }
+        if (addressEditText.length() === 0) {
+            addressEditText.error = "This Field is Required"
+            passed = false
+        }
+
+        // after all validation return true.
+        if (passed) {
+            return true
+        }
+        return false
     }
 }
