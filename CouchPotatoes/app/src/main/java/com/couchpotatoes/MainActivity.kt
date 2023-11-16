@@ -90,9 +90,14 @@ class MainActivity : AppCompatActivity() {
                     val user = User(currentUser?.displayName, currentUser?.email)
                     // add to database
                     database.child("users").child(userId).setValue(user)
-
-                    val intent = Intent(this, UserSetupActivity::class.java)
-                    startActivity(intent)
+                    if (database.child("users").child(userId).child("Name").get().toString().isEmpty()) {
+                        val intent = Intent(this, UserSetupActivity::class.java)
+                        startActivity(intent)
+                    }
+                    else {
+                        val intent = Intent(this, UserSelectionActivity::class.java)
+                        startActivity(intent)
+                    }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("Google sign-in", "signInWithCredential:failure", task.exception)
