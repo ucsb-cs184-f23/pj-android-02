@@ -19,7 +19,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -88,16 +92,27 @@ class MainActivity : AppCompatActivity() {
 
                     // create user
                     val user = User(currentUser?.displayName, currentUser?.email)
-                    // add to database
-                    database.child("users").child(userId).setValue(user)
-                    if (database.child("users").child(userId).child("Name").get().toString().isEmpty()) {
-                        val intent = Intent(this, UserSetupActivity::class.java)
-                        startActivity(intent)
-                    }
-                    else {
-                        val intent = Intent(this, UserSelectionActivity::class.java)
-                        startActivity(intent)
-                    }
+
+                    val userRef = database.child("users")
+                    userRef.addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val checkUser = dataSnapshot.child(userId).child("Name").exists()
+                            if (checkUser) {
+                                val intent = Intent(this@MainActivity, UserSelectionActivity::class.java)
+                                startActivity(intent)
+                            }
+                            else {
+                                // add to database
+                                database.child("users").child(userId).setValue(user)
+                                val intent = Intent(this@MainActivity, UserSetupActivity::class.java)
+                                startActivity(intent)
+                            }
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            Log.w("TAG", "Failed to read value", databaseError.toException())
+                        }
+                    })
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("Google sign-in", "signInWithCredential:failure", task.exception)

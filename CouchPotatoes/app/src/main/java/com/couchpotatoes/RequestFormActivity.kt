@@ -2,14 +2,18 @@ package com.couchpotatoes
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.couchpotatoes.classes.Job
 import com.couchpotatoes.classes.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import java.util.UUID
 
@@ -25,8 +29,25 @@ class RequestFormActivity : BaseActivity() {
         setContentView(R.layout.activity_request_form)
 
         auth = FirebaseAuth.getInstance()
+        val userId = auth.currentUser!!.uid
 
         createNavMenu(R.id.my_toolbar, this, auth)
+
+        database = Firebase.database.reference
+
+        val userRef = database.child("users")
+        userRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val initialAddress = dataSnapshot.child(userId).child("Address")
+                if (initialAddress.exists()) {
+                    findViewById<EditText>(R.id.address).setText(initialAddress.value.toString())
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w("TAG", "Failed to read value", databaseError.toException())
+            }
+        })
     }
 
     fun submitButtonHandler(view: View) {
