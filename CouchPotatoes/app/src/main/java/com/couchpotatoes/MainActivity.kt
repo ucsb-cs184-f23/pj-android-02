@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -84,26 +85,28 @@ class MainActivity : AppCompatActivity() {
                     // under their uid (can improve later, easy solution for now)
                     val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
-                    val rootRef = Firebase.database.reference
-                    val uidRef = rootRef.child("users").child(userId);
-                    val eventListener = object: ValueEventListener {
+                    // create user
+                    val user = User(currentUser?.displayName, currentUser?.email)
+                    val userRef = database.child("users")
+                    userRef.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            if (!dataSnapshot.exists()) {
-                                // create user
-                                val user = User(currentUser?.displayName, currentUser?.email)
+                            val checkUser = dataSnapshot.child(userId).child("Name").exists()
+                            if (checkUser) {
+                                val intent = Intent(this@MainActivity, UserSelectionActivity::class.java)
+                                startActivity(intent)
+                            }
+                            else {
                                 // add to database
                                 database.child("users").child(userId).setValue(user)
+                                val intent = Intent(this@MainActivity, UserSetupActivity::class.java)
+                                startActivity(intent)
                             }
                         }
 
-                        override fun onCancelled(error: DatabaseError) {
-                            Log.d("TAG",error.getMessage())
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            Log.w("TAG", "Failed to read value", databaseError.toException())
                         }
-                    }
-                    uidRef.addListenerForSingleValueEvent(eventListener)
-
-                    val intent = Intent(this, UserSelectionActivity::class.java)
-                    startActivity(intent)
+                    })
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("Google sign-in", "signInWithCredential:failure", task.exception)
