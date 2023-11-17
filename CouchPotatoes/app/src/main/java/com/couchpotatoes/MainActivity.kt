@@ -2,16 +2,11 @@ package com.couchpotatoes
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.Button
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.couchpotatoes.jobBoard.JobBoardActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.couchpotatoes.classes.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -19,7 +14,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -82,14 +80,27 @@ class MainActivity : AppCompatActivity() {
                     Log.d("Google sign-in", "signInWithCredential:success")
                     val currentUser = auth.currentUser
 
-                    // add user to database
+                    // add user to database if they don't exist already
                     // under their uid (can improve later, easy solution for now)
                     val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
-                    // create user
-                    val user = User(currentUser?.displayName, currentUser?.email)
-                    // add to database
-                    database.child("users").child(userId).setValue(user)
+                    val rootRef = Firebase.database.reference
+                    val uidRef = rootRef.child("users").child(userId);
+                    val eventListener = object: ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            if (!dataSnapshot.exists()) {
+                                // create user
+                                val user = User(currentUser?.displayName, currentUser?.email)
+                                // add to database
+                                database.child("users").child(userId).setValue(user)
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("TAG",error.getMessage())
+                        }
+                    }
+                    uidRef.addListenerForSingleValueEvent(eventListener)
 
                     val intent = Intent(this, UserSelectionActivity::class.java)
                     startActivity(intent)
