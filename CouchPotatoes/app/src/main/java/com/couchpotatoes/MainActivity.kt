@@ -2,16 +2,11 @@ package com.couchpotatoes
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.Button
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.couchpotatoes.jobBoard.JobBoardActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.couchpotatoes.classes.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -86,13 +81,12 @@ class MainActivity : AppCompatActivity() {
                     Log.d("Google sign-in", "signInWithCredential:success")
                     val currentUser = auth.currentUser
 
-                    // add user to database
+                    // add user to database if they don't exist already
                     // under their uid (can improve later, easy solution for now)
                     val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
                     // create user
                     val user = User(currentUser?.displayName, currentUser?.email)
-
                     val userRef = database.child("users")
                     userRef.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
