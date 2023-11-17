@@ -3,6 +3,7 @@ package com.couchpotatoes
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.NumberPicker
 import androidx.appcompat.app.AppCompatActivity
 import com.couchpotatoes.classes.Job
 import com.couchpotatoes.classes.User
@@ -10,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.UUID
 
 
@@ -24,6 +27,15 @@ class RequestFormActivity : BaseActivity() {
         auth = FirebaseAuth.getInstance()
 
         createNavMenu(R.id.my_toolbar, this, auth)
+
+        val hourPicker = findViewById<NumberPicker>(R.id.hourPicker)
+        val dayPicker = findViewById<NumberPicker>(R.id.dayPicker)
+
+        hourPicker.maxValue = 23
+        hourPicker.minValue = 1
+
+        dayPicker.maxValue = 7
+        dayPicker.minValue = 0
     }
 
     fun submitbuttonHandler(view: View) {
@@ -38,6 +50,10 @@ class RequestFormActivity : BaseActivity() {
         val cost = costEditText.text.toString()
         val addressEditText = findViewById<View>(R.id.address) as EditText
         val address = addressEditText.text.toString()
+        val durationEditHours = findViewById<NumberPicker>(R.id.hourPicker)
+        val durationHours = durationEditHours.value
+        val durationEditDays = findViewById<NumberPicker>(R.id.dayPicker)
+        val durationDays = durationEditDays.value
 
         // switch to better system later
         val jobId = UUID.randomUUID().toString()
@@ -51,6 +67,8 @@ class RequestFormActivity : BaseActivity() {
             cost,
             where,
             address,
+            durationHours,
+            durationDays,
             "pending")
 
         database.child("jobs").child(jobId).setValue(job)
