@@ -1,11 +1,15 @@
 package com.couchpotatoes.jobBoard
 
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ArrayAdapter
+import android.view.ViewGroup
+import android.widget.BaseAdapter
 import android.widget.ListView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.TextView
 import com.couchpotatoes.BaseActivity
 import com.couchpotatoes.CurrentJobActivity
 import com.couchpotatoes.R
@@ -20,6 +24,7 @@ class JobItemActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var job: Job
+    var adapter: MyAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_job_item)
@@ -29,34 +34,78 @@ class JobItemActivity : BaseActivity() {
 
         job = intent.getSerializableExtra("job") as Job
 
-        val arrayAdapter: ArrayAdapter<*>
         val users = arrayOf(
-            "Requester: ${job.requesterName}", "Requester Email: ${job.requesterEmail}", "Item: ${job.item}",
-            "Price: ${job.price}", "Store: ${job.store}", "Delivery Address: ${job.deliveryAddress}", "Status: ${job.status}"
+            arrayOf("Requester:", job.requesterName),
+            arrayOf("Requester Email:", job.requesterEmail),
+            arrayOf("Item:", job.item),
+            arrayOf("Price:", job.price),
+            arrayOf("Store:", job.store),
+            arrayOf("Delivery Address:", job.deliveryAddress),
+            arrayOf("Status:", job.status)
         )
 
-        // access the listView from xml file
+        adapter = MyAdapter(this, users)
         var mListView = findViewById<ListView>(R.id.job_list)
-        arrayAdapter = ArrayAdapter(this,
-            android.R.layout.simple_list_item_1, users)
-        mListView.adapter = arrayAdapter
+        mListView.adapter = adapter
+    }
+
+    fun rejectButtonHandler(view: View) {
+        val dialogBuilder = AlertDialog.Builder(this)
+
+        dialogBuilder.setMessage("Are you sure you want to reject this job?")
+            .setPositiveButton("Yes") { _, _ ->
+                // Redirect to Job Board Page
+                val intent = Intent(this, JobBoardActivity::class.java)
+                startActivity(intent)
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
 
     fun acceptButtonHandler(view: View) {
-        // Change the job's status from "pending" to "accepted"
-        database = Firebase.database.reference
-        database.child("jobs").child(job.uid.toString()).child("status").setValue("accepted")
+        val dialogBuilder = AlertDialog.Builder(this)
 
-        // Add the job to the user's current job
-        auth = FirebaseAuth.getInstance()
-        database = Firebase.database.reference
+        dialogBuilder.setMessage("Are you sure you want to accept this job?")
+            .setPositiveButton("Yes") { _, _ ->
+                database = Firebase.database.reference
+                database.child("jobs").child(job.uid.toString()).child("status").setValue("accepted")
 
-        val user = FirebaseAuth.getInstance().currentUser
+                // Add the job to the user's current job
+                auth = FirebaseAuth.getInstance()
+                database = Firebase.database.reference
 
-        database.child("users").child(user!!.uid).child("currentJob").setValue(job.uid.toString())
+                val user = FirebaseAuth.getInstance().currentUser
 
-        // Redirect to Current Job Page
-        val intent = Intent(this, CurrentJobActivity::class.java)
-        startActivity(intent)
+                database.child("users").child(user!!.uid).child("currentJob").setValue(job.uid.toString())
+
+                // Redirect to Current Job Page
+                val intent = Intent(this, CurrentJobActivity::class.java)
+                startActivity(intent)
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
+}
+
+class MyAdapter(private val context: Context, private val arrayList: Array<Array<String?>>) : BaseAdapter() {
+    private lateinit var key: TextView
+    private lateinit var value: TextView
+    override fun getCount(): Int {
+        return arrayList.size
+    }
+    override fun getItem(position: Int): Any {
+        return position
+    }
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
+        var convertView = convertView
+        convertView = LayoutInflater.from(context).inflate(R.layout.activity_job_details_item, parent, false)
+        key = convertView.findViewById(R.id.key)
+        value = convertView.findViewById(R.id.value)
+        key.text = arrayList[position][0]
+        value.text = arrayList[position][1]
+        return convertView
     }
 }
