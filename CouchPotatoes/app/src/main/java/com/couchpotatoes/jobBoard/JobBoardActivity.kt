@@ -36,16 +36,22 @@ class JobBoardActivity : BaseActivity() {
                 for (ds in dataSnapshot.children) {
                     val job = Job()
                     if (ds.child("status").getValue<String?>().toString() == "pending") {
-                        // Pass job details to Job Board Adapter to create the Job Board List
-                        job.deliveryAddress = ds.child("deliveryAddress").getValue<String?>().toString()
-                        job.status = ds.child("status").getValue<String?>().toString()
-                        job.requesterName = ds.child("requesterName").getValue<String?>().toString()
-                        job.requesterEmail = ds.child("requesterEmail").getValue<String?>().toString()
-                        job.item = ds.child("item").getValue<String?>().toString()
-                        job.price = ds.child("price").getValue<String?>().toString()
-                        job.store = ds.child("store").getValue<String?>().toString()
-                        job.uid = ds.child("uid").getValue<String?>().toString()
-                        jobList.add(job)
+                        if (ds.child("expirationTime").getValue<Long?>()!! > System.currentTimeMillis()) {
+                            // Pass job details to Job Board Adapter to create the Job Board List
+                            job.deliveryAddress = ds.child("deliveryAddress").getValue<String?>().toString()
+                            job.status = ds.child("status").getValue<String?>().toString()
+                            job.requesterName = ds.child("requesterName").getValue<String?>().toString()
+                            job.requesterEmail = ds.child("requesterEmail").getValue<String?>().toString()
+                            job.item = ds.child("item").getValue<String?>().toString()
+                            job.price = ds.child("price").getValue<String?>().toString()
+                            job.store = ds.child("store").getValue<String?>().toString()
+                            job.uid = ds.child("uid").getValue<String?>().toString()
+                            job.expirationTime = ds.child("expirationTime").getValue<Long?>()
+                            jobList.add(job)
+                        }
+                        else{
+                            database.child("jobs").child(ds.child("uid").getValue<String?>().toString()).child("status").setValue("canceled")
+                        }
                     }
                 }
 
