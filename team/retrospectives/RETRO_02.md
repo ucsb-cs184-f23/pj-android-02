@@ -24,7 +24,6 @@ Measurement:
 
 We used the start-stop-continue retro, where each person wrote down things that we wanted to start doing, stop doing, and continue doing. Then we voted on issues that we thought were most pressing and brainstormed ideas on how we could address those things. 
 
-
 Advice:
 * Don't be afraid to call on specific people to talk if no one is sharing.
 * Keep team focused and on-track
@@ -32,4 +31,4 @@ Advice:
 
 ## Retro Experiment Results
 
-For defining issues better and keeping their scopes larger, we found that these two goals come hand in hand, as the larger an issue was, the less likey we found that team members' work overlap.
+For defining issues better and keeping their scopes larger, we found that these two goals come hand in hand, as the larger an issue was, the less likely we found that team members' work overlap. Another thing that we found helpful was that when we wrote acceptance criteria when we created the issues, it was easier for team members to know what the issue entails, which made it easier to cut down on accidentally overlapping work (before, whoever worked on the issue had the freedom to work on however they thought that the issue meant, which obviously did not always align with what the team thought). We also found that it made it easier for testing, as the testers were able to have a clear checklist to work through when testing, rather than having to figure it out on their own. So we think that it will be a good idea to continue writing acceptance criteria and making our issues larger.
