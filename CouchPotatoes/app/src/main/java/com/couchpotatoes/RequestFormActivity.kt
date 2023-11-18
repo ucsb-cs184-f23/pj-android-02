@@ -11,8 +11,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
-import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.UUID
 
 
@@ -55,6 +53,8 @@ class RequestFormActivity : BaseActivity() {
         val durationEditDays = findViewById<NumberPicker>(R.id.dayPicker)
         val durationDays = durationEditDays.value
 
+        val expirationTime = System.currentTimeMillis() + (durationHours * 60 * 60 * 1000) + (durationDays * 24 * 60 * 60 * 1000)
+
         // switch to better system later
         val jobId = UUID.randomUUID().toString()
 
@@ -67,8 +67,7 @@ class RequestFormActivity : BaseActivity() {
             cost,
             where,
             address,
-            durationHours,
-            durationDays,
+            expirationTime,
             "pending")
 
         database.child("jobs").child(jobId).setValue(job)
