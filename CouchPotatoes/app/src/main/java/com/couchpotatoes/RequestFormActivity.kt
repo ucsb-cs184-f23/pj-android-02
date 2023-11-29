@@ -1,11 +1,15 @@
 package com.couchpotatoes
 
+import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.couchpotatoes.classes.Job
 import com.couchpotatoes.classes.User
@@ -98,6 +102,13 @@ class RequestFormActivity : BaseActivity() {
                 "pending")
 
             database.child("jobs").child(jobId).setValue(job)
+
+            val confirmationPopup = Popup(this)
+            confirmationPopup.showConfirm()
+        }
+        else{
+            val confirmationPopup = Popup(this)
+            confirmationPopup.showError()
         }
     }
 
@@ -130,5 +141,34 @@ class RequestFormActivity : BaseActivity() {
             return true
         }
         return false
+    }
+}
+
+class Popup(private val context: Context) {
+    private lateinit var dialog: Dialog
+    fun showConfirm() {
+        dialog = Dialog(context)
+        dialog.setContentView(R.layout.request_confirmation)
+
+        val okButton: Button = dialog.findViewById(R.id.okButton)
+
+        okButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    fun showError() {
+        dialog = Dialog(context)
+        dialog.setContentView(R.layout.request_error)
+
+        val okButton: Button = dialog.findViewById(R.id.okButton)
+
+        okButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 }
