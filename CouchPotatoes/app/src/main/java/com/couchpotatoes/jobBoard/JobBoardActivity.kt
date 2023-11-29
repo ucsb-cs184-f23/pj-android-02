@@ -26,6 +26,8 @@ class JobBoardActivity : BaseActivity() {
         var database: DatabaseReference = Firebase.database.reference
         var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
+        val user = FirebaseAuth.getInstance().currentUser
+
         createNavMenu(R.id.my_toolbar, this, auth)
 
         val jobsRef = database.child("jobs")
@@ -35,7 +37,7 @@ class JobBoardActivity : BaseActivity() {
                 var jobList = ArrayList<Job>()
                 for (ds in dataSnapshot.children) {
                     val job = Job()
-                    if (ds.child("status").getValue<String?>().toString() == "pending") {
+                    if (ds.child("status").getValue<String?>().toString() == "pending" && ds.child("requesterEmail").getValue<String?>().toString() != user?.email) {
                         if (ds.child("expirationTime").getValue<Long?>()!! > System.currentTimeMillis()) {
                             // Pass job details to Job Board Adapter to create the Job Board List
                             job.deliveryAddress = ds.child("deliveryAddress").getValue<String?>().toString()
@@ -50,7 +52,7 @@ class JobBoardActivity : BaseActivity() {
                             jobList.add(job)
                         }
                         else{
-                            database.child("jobs").child(ds.child("uid").getValue<String?>().toString()).child("status").setValue("canceled")
+                            database.child("jobs").child(ds.child("uid").getValue<String?>().toString()).child("status").setValue("cancelled")
                         }
                     }
                 }
