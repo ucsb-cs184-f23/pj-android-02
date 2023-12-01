@@ -30,8 +30,6 @@ class UserProfileActivity : BaseActivity() {
 
         createNavMenu(R.id.my_toolbar, this, auth)
 
-
-
         val userRef = database.child("users")
         userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -40,10 +38,10 @@ class UserProfileActivity : BaseActivity() {
                 val number = dataSnapshot.child(auth.currentUser!!.uid).child("Phone Number")
                 val email = dataSnapshot.child(auth.currentUser!!.uid).child("email")
 
-                findViewById<TextView>(R.id.textViewUserName).text = name.value.toString()
-                findViewById<TextView>(R.id.textViewUserEmail).text = email.value.toString()
-                findViewById<TextView>(R.id.textViewUserAddress).text = address.value.toString()
-                findViewById<TextView>(R.id.textViewUserNumber).text = number.value.toString()
+                findViewById<TextView>(R.id.textViewUserName).text = "Name: " + name.value.toString()
+                findViewById<TextView>(R.id.textViewUserEmail).text = "Email: " + email.value.toString()
+                findViewById<TextView>(R.id.textViewUserAddress).text = "Address: " + address.value.toString()
+                findViewById<TextView>(R.id.textViewUserNumber).text = "Phone Number: " + number.value.toString()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -64,19 +62,19 @@ class UserProfileActivity : BaseActivity() {
 
         editButton.setOnClickListener {
             nameTextView.visibility = View.GONE
-            nameEditText.setText(nameTextView.text)
+            nameEditText.setText(nameTextView.text.substring("Name: ".length))
             nameEditText.visibility = View.VISIBLE
 
             emailTextView.visibility = View.GONE
-            emailEditText.setText(emailTextView.text)
+            emailEditText.setText(emailTextView.text.substring("Email: ".length))
             emailEditText.visibility = View.VISIBLE
 
             addressTextView.visibility = View.GONE
-            addressEditText.setText(addressTextView.text)
+            addressEditText.setText(addressTextView.text.substring("Address: ".length))
             addressEditText.visibility = View.VISIBLE
 
             numberTextView.visibility = View.GONE
-            numberEditText.setText(numberTextView.text)
+            numberEditText.setText(numberTextView.text.substring("Phone Number: ".length))
             numberEditText.visibility = View.VISIBLE
 
             editButton.visibility = View.GONE
