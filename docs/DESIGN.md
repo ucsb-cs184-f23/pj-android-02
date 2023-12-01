@@ -14,7 +14,7 @@ For our backend, we are using Firebase to implement authentication and provide a
 
 We decided that we wanted to pivot our app idea from a game discount app to a delivery service app. 
 
-### spritn01/lect05
+### sprint01/lect05
 
 We decided on basic mockup of our app.
 
