@@ -99,7 +99,7 @@
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:ems="10"
-                android:hint="Cost of job"
+                android:hint="Delivery Fee"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"/>
         </androidx.cardview.widget.CardView>
