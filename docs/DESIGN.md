@@ -10,6 +10,16 @@ For our backend, we are using Firebase to implement authentication and provide a
 
 # Important Team Decisions
 
+### sprint01/lect04
+
+We decided that we wanted to pivot our app idea from a game discount app to a delivery service app. 
+
+### spritn01/lect05
+
+We decided on basic mockup of our app.
+
+From here on out, we generally followed our guidelines up until the current moment.
+
 # User Flow
 
 ![Interaction Flow](https://github.com/ucsb-cs184-f23/pj-android-02/assets/72772860/08071a42-3e6a-4344-aecb-19b383365102)
