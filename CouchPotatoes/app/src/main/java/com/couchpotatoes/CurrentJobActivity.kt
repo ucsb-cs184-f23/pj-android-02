@@ -1,16 +1,21 @@
 package com.couchpotatoes
 
+import android.app.AlertDialog
+import android.graphics.Color
+import android.graphics.Color.rgb
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.couchpotatoes.classes.Job
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -35,90 +40,159 @@ class CurrentJobActivity : BaseActivity() {
         val emptyView = findViewById<TextView>(R.id.emptyView)
         emptyView.visibility = View.VISIBLE
 
-        // First, get the currentJob for the user
-        database.child("users").child(user!!.uid).child("currentJob").get().addOnSuccessListener { snapshot ->
-            val currentJob = snapshot.value as? String
-            if (currentJob != null) {
-                // Now, get the job details using the currentJob
-                database.child("jobs").child(currentJob).get().addOnSuccessListener { jobSnapshot ->
-                    val job = jobSnapshot.getValue(Job::class.java)
+        database.child("users").child(user!!.uid).child("currentJob").get()
+            .addOnSuccessListener { snapshot ->
+                val currentJobId = snapshot.value as? String
+                // Attach a listener to read the data at our posts reference
+                database.child("jobs").child(currentJobId.toString())
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            Log.d("TAG", dataSnapshot.toString())
+                            val job = dataSnapshot.getValue<Job>()
+                            Log.d("TAG", job.toString())
+                                if (job == null || job.status == "complete") {
+                                    detailsCard.visibility = View.GONE
+                                    emptyView.text = "You have nothing to do"
+                                } else {
+                                    emptyView.visibility = View.GONE
+                                    detailsCard.visibility = View.VISIBLE
+                                    findViewById<TextView>(R.id.requesterName).text =
+                                        job?.requesterName
+                                    findViewById<TextView>(R.id.requesterEmail).text =
+                                        job?.requesterEmail
+                                    findViewById<TextView>(R.id.item).text = job?.item
+                                    findViewById<TextView>(R.id.price).text = job?.price
+                                    findViewById<TextView>(R.id.store).text = job?.store
+                                    findViewById<TextView>(R.id.deliveryAddress).text =
+                                        job?.deliveryAddress
+                                    findViewById<TextView>(R.id.status).text = job?.status
+                                    val cancelButton = findViewById<Button>(R.id.cancel)
+                                    val completeButton = findViewById<Button>(R.id.complete)
 
-                    if (job == null) {
-                        detailsCard.visibility = View.GONE
-                        emptyView.text = "Your current job was cancelled"
-                        database.child("users").child(user!!.uid).child("currentJob").removeValue()
-                    } else {
-                        emptyView.visibility = View.GONE
-                        detailsCard.visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.requesterName).text = job?.requesterName
-                        findViewById<TextView>(R.id.requesterEmail).text = job?.requesterEmail
-                        findViewById<TextView>(R.id.item).text = job?.item
-                        findViewById<TextView>(R.id.price).text = job?.price
-                        findViewById<TextView>(R.id.store).text = job?.store
-                        findViewById<TextView>(R.id.deliveryAddress).text = job?.deliveryAddress
-                        findViewById<TextView>(R.id.status).text = job?.status
-                        val cancelButton = findViewById<Button>(R.id.cancel)
-                        val completeButton = findViewById<Button>(R.id.complete)
 
-                        val dialogBuilder = AlertDialog.Builder(this)
+                                    when (job?.status) {
+                                        "accepted" -> {
+                                            completeButton.text = "Gather"
+                                        }
 
-                        if (user.email == job?.requesterEmail) { // You are the requester
+                                        "gathering" -> {
+                                            completeButton.text = "Deliver"
+                                        }
 
-                            cancelButton.setOnClickListener {
-                                dialogBuilder.setMessage("Are you sure you want to cancel this job?")
-                                    .setPositiveButton("Yes") { _, _ ->
-                                        database.child("jobs").child(currentJob).removeValue()
-                                        database.child("users").child(user!!.uid).child("currentJob").setValue(null)
-                                        recreate()
+                                        "delivering" -> {
+                                            completeButton.text = "Complete"
+                                        }
                                     }
-                                    .setNegativeButton("No", null)
-                                    .show()
-                            }
 
-                            completeButton.setOnClickListener {
-                                dialogBuilder.setMessage("Are you sure you want to mark this job as complete?")
-                                    .setPositiveButton("Yes") { _, _ ->
-                                        database.child("jobs").child(currentJob).child("status").setValue("complete")
-                                        database.child("users").child(user!!.uid).child("currentJob").setValue(null)
-                                        recreate()
+                                    val dialogBuilder = AlertDialog.Builder(this@CurrentJobActivity)
+
+                                    if (user.email == job.requesterEmail) { // You are the requester
+
+                                        cancelButton.setOnClickListener {
+                                            dialogBuilder.setMessage("Are you sure you want to cancel this job?")
+                                                .setPositiveButton("Yes") { _, _ ->
+                                                    database.child("jobs")
+                                                        .child(currentJobId.toString())
+                                                        .removeValue()
+                                                    database.child("users").child(user!!.uid)
+                                                        .child("currentJob").setValue(null)
+                                                }
+                                                .setNegativeButton("No", null)
+                                                .show()
+                                        }
+
+                                        completeButton.setOnClickListener {
+                                            dialogBuilder.setMessage("Are you sure you want to mark this job as complete?")
+                                                .setPositiveButton("Yes") { _, _ ->
+                                                    database.child("jobs")
+                                                        .child(currentJobId.toString())
+                                                        .child("status")
+                                                        .setValue("complete")
+                                                    database.child("users").child(user!!.uid)
+                                                        .child("currentJob").setValue(null)
+                                                }
+                                                .setNegativeButton("No", null)
+                                                .show()
+                                        }
+
+
+
+
+                                    } else { // You are the dasher
+                                        // Cancel Button
+                                        cancelButton.setOnClickListener {
+                                            dialogBuilder.setMessage("Are you sure you want to cancel this job?")
+                                                .setPositiveButton("Yes") { _, _ ->
+                                                    database.child("users").child(user!!.uid)
+                                                        .child("currentJob").setValue(null)
+                                                    database.child("jobs")
+                                                        .child(currentJobId.toString())
+                                                        .child("status")
+                                                        .setValue("pending")
+                                                    recreate()
+                                                }
+                                                .setNegativeButton("No", null)
+                                                .show()
+                                        }
+
+                                        if (job?.status == "accepted") {
+                                            // Gathering Button
+                                            completeButton.setBackgroundColor(rgb(0,0x66,0x66))
+                                            completeButton.setOnClickListener {
+                                                dialogBuilder.setMessage("Are you sure you want to mark this job as gathering?")
+                                                    .setPositiveButton("Yes") { _, _ ->
+                                                        database.child("jobs")
+                                                            .child(currentJobId.toString())
+                                                            .child("status")
+                                                            .setValue("gathering")
+                                                    }
+                                                    .setNegativeButton("No", null)
+                                                    .show()
+                                            }
+                                        }
+
+                                        if (job?.status == "gathering") {
+                                            // Delivering Button
+                                            completeButton.setBackgroundColor(rgb(0xC4,0x50,0x25))
+                                            completeButton.setOnClickListener {
+                                                dialogBuilder.setMessage("Are you sure you want to mark this job as delivering?")
+                                                    .setPositiveButton("Yes") { _, _ ->
+                                                        database.child("jobs")
+                                                            .child(currentJobId.toString())
+                                                            .child("status")
+                                                            .setValue("delivering")
+                                                    }
+                                                    .setNegativeButton("No", null)
+                                                    .show()
+                                            }
+                                        }
+
+                                        if (job?.status == "delivering") {
+                                            // Complete Button
+                                            completeButton.setBackgroundColor(rgb(0xEE,0x99,0x39))
+                                            completeButton.setOnClickListener {
+                                                dialogBuilder.setMessage("Are you sure you want to mark this job as complete?")
+                                                    .setPositiveButton("Yes") { _, _ ->
+                                                        database.child("jobs")
+                                                            .child(currentJobId.toString())
+                                                            .child("status")
+                                                            .setValue("complete")
+                                                        database.child("users").child(user!!.uid)
+                                                            .child("currentJob").setValue(null)
+                                                        recreate()
+                                                    }
+                                                    .setNegativeButton("No", null)
+                                                    .show()
+                                            }
+                                        }
                                     }
-                                    .setNegativeButton("No", null)
-                                    .show()
-                            }
-
-                        } else { // You are the dasher
-
-                            cancelButton.setOnClickListener {
-                                dialogBuilder.setMessage("Are you sure you want to cancel this job?")
-                                    .setPositiveButton("Yes") { _, _ ->
-                                        database.child("users").child(user!!.uid).child("currentJob").setValue(null)
-                                        database.child("jobs").child(currentJob).child("status").setValue("pending")
-                                        recreate()
-                                    }
-                                    .setNegativeButton("No", null)
-                                    .show()
-                            }
-
-                            completeButton.setOnClickListener {
-                                dialogBuilder.setMessage("Are you sure you want to mark this job as complete?")
-                                    .setPositiveButton("Yes") { _, _ ->
-                                        database.child("jobs").child(currentJob).child("status").setValue("complete")
-                                        database.child("users").child(user!!.uid).child("currentJob").setValue(null)
-                                        recreate()
-                                    }
-                                    .setNegativeButton("No", null)
-                                    .show()
-                            }
+                                }
                         }
-                    }
-                }.addOnFailureListener {
-                    emptyView.visibility = View.VISIBLE
-                }
-            } else {
-                emptyView.visibility = View.VISIBLE
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            println("The read failed: " + databaseError.code)
+                        }
+                    })
             }
-        }.addOnFailureListener {
-            emptyView.visibility = View.VISIBLE
-        }
     }
 }
