@@ -1,14 +1,24 @@
 package com.couchpotatoes
 
+import android.Manifest
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Color.rgb
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.couchpotatoes.classes.Job
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -18,15 +28,21 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.mikepenz.materialdrawer.icons.MaterialDrawerFont.description
 
-class CurrentJobActivity : BaseActivity() {
+class CurrentJobActivity () : BaseActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
+    private var CHANNEL_ID = "couch_potato_channel_id"
+    private var NOTIFICATION_ID = 101
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_current_job)
+
+        createNotificationChannel()
 
         auth = FirebaseAuth.getInstance()
         database = Firebase.database.reference
@@ -53,6 +69,10 @@ class CurrentJobActivity : BaseActivity() {
                                 if (job == null || job.status == "complete") {
                                     detailsCard.visibility = View.GONE
                                     emptyView.text = "You have nothing to do"
+                                    Log.d("TAG", job?.status.toString())
+                                    if (job != null && user.email == job.requesterEmail) {
+                                        showNotification("Request has been completed")
+                                    }
                                 } else {
                                     emptyView.visibility = View.GONE
                                     detailsCard.visibility = View.VISIBLE
@@ -68,21 +88,6 @@ class CurrentJobActivity : BaseActivity() {
                                     findViewById<TextView>(R.id.status).text = job?.status
                                     val cancelButton = findViewById<Button>(R.id.cancel)
                                     val completeButton = findViewById<Button>(R.id.complete)
-
-
-                                    when (job?.status) {
-                                        "accepted" -> {
-                                            completeButton.text = "Gather"
-                                        }
-
-                                        "gathering" -> {
-                                            completeButton.text = "Deliver"
-                                        }
-
-                                        "delivering" -> {
-                                            completeButton.text = "Complete"
-                                        }
-                                    }
 
                                     val dialogBuilder = AlertDialog.Builder(this@CurrentJobActivity)
 
@@ -115,11 +120,46 @@ class CurrentJobActivity : BaseActivity() {
                                                 .show()
                                         }
 
+                                        // Request Notification Permissions
+                                        if (ActivityCompat.checkSelfPermission(
+                                                this@CurrentJobActivity,
+                                                POST_NOTIFICATIONS
+                                            ) != PackageManager.PERMISSION_GRANTED
+                                        ) {
+                                            requestPermissions(arrayOf(POST_NOTIFICATIONS), 100)
+                                        }
 
+                                        // Send notification based on changed status
+                                        when (job?.status) {
+                                            "accepted" -> {
+                                                showNotification("Your request has been accepted")
+                                            }
 
+                                            "gathering" -> {
+                                                showNotification("Your hustler is now gathering")
+                                            }
 
+                                            "delivering" -> {
+                                                showNotification("Your hustler is now delivering")
+                                            }
+                                        }
                                     } else { // You are the dasher
                                         // Cancel Button
+
+                                        when (job?.status) {
+                                            "accepted" -> {
+                                                completeButton.text = "Gather"
+                                            }
+
+                                            "gathering" -> {
+                                                completeButton.text = "Deliver"
+                                            }
+
+                                            "delivering" -> {
+                                                completeButton.text = "Complete"
+                                            }
+                                        }
+
                                         cancelButton.setOnClickListener {
                                             dialogBuilder.setMessage("Are you sure you want to cancel this job?")
                                                 .setPositiveButton("Yes") { _, _ ->
@@ -194,5 +234,60 @@ class CurrentJobActivity : BaseActivity() {
                         }
                     })
             }
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is not in the Support Library.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Couch Potato"
+            val descriptionText = "Status changed"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system.
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun showNotification(status: String) {
+        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.potato_icon)
+            .setContentTitle("Status Change")
+            .setContentText(status)
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText(status))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        with (NotificationManagerCompat.from(this)) {
+            // notificationId is a unique int for each notification that you must define.
+            if (ActivityCompat.checkSelfPermission(
+                    this@CurrentJobActivity,
+                    POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+
+                requestPermissions(arrayOf(POST_NOTIFICATIONS), 100)
+                Log.d("TAG", "no permission")
+                if (ActivityCompat.checkSelfPermission(
+                        this@CurrentJobActivity,
+                        POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
+            }
+            notify(NOTIFICATION_ID, builder.build())
+        }
     }
 }
