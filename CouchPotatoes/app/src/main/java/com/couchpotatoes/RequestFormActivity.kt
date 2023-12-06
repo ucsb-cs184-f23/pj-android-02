@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.couchpotatoes.classes.Job
 import com.couchpotatoes.classes.User
 import com.google.firebase.auth.FirebaseAuth
@@ -101,7 +100,10 @@ class RequestFormActivity : BaseActivity() {
                 expirationTime,
                 "pending")
 
+            val user = FirebaseAuth.getInstance().currentUser
+
             database.child("jobs").child(jobId).setValue(job)
+            database.child("users").child(user!!.uid).child("currentJob").setValue(job.uid.toString())
 
             val confirmationPopup = Popup(this)
             confirmationPopup.showConfirm()
@@ -154,6 +156,9 @@ class Popup(private val context: Context) {
 
         okButton.setOnClickListener {
             dialog.dismiss()
+            // Redirect to Current Job Page
+            val intent = Intent(context, CurrentJobActivity::class.java)
+            context.startActivity(intent)
         }
 
         dialog.show()
