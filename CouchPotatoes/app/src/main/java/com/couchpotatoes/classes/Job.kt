@@ -18,6 +18,7 @@ data class Job constructor(
     var store: String? = null,
     var deliveryAddress: String? = null,
     var expirationTime: Long? = null,
+    var category: String? = null,
     var status: String? = null
 ) : Serializable {
 }

@@ -37,7 +37,7 @@ class JobBoardActivity : BaseActivity() {
                 var jobList = ArrayList<Job>()
                 for (ds in dataSnapshot.children) {
                     val job = Job()
-                    if (ds.child("status").getValue<String?>().toString() == "pending" && ds.child("requesterEmail").getValue<String?>().toString() != user?.email) {
+                    if (ds.child("status").getValue<String?>().toString() == "pending" ) { // && ds.child("requesterEmail").getValue<String?>().toString() != user?.email
                         if (ds.child("expirationTime").getValue<Long?>()!! > System.currentTimeMillis()) {
                             // Pass job details to Job Board Adapter to create the Job Board List
                             job.deliveryAddress = ds.child("deliveryAddress").getValue<String?>().toString()
@@ -49,6 +49,7 @@ class JobBoardActivity : BaseActivity() {
                             job.store = ds.child("store").getValue<String?>().toString()
                             job.uid = ds.child("uid").getValue<String?>().toString()
                             job.expirationTime = ds.child("expirationTime").getValue<Long?>()
+                            job.uid = ds.child("category").getValue<String?>().toString()
                             jobList.add(job)
                         }
                         else{

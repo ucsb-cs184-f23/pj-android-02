@@ -132,54 +132,76 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_width="350dp"
-        android:layout_height="70dp"
+        android:layout_height="40dp"
 
         android:background="@color/white"
         android:orientation="vertical" >
-
         <TextView
             android:layout_width="350dp"
             android:layout_height="20dp"
             android:gravity="center"
-            android:text="Duration of Request"
+            android:text="Type of Request"
             android:textSize="16sp" />
+        <Spinner
+            android:id="@+id/categoryDropdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </LinearLayout>
 
         <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="50dp"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_width="350dp"
+            android:layout_height="70dp"
+
             android:background="@color/white"
-            android:orientation="horizontal">
+            android:orientation="vertical" >
 
             <TextView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="350dp"
+                android:layout_height="20dp"
                 android:gravity="center"
-                android:text="Hours"
-                android:textSize="15sp" />
+                android:text="Duration of Request"
+                android:textSize="16sp" />
 
-            <NumberPicker
-                android:id="@+id/hourPicker"
-                android:layout_width="60dp"
-                android:layout_height="50dp" />
-
-            <TextView
-                android:layout_width="50dp"
+            <LinearLayout
+                android:layout_width="350dp"
                 android:layout_height="50dp"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Days"
-                android:textSize="15sp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
 
-            <NumberPicker
-                android:id="@+id/dayPicker"
-                android:layout_width="60dp"
-                android:layout_height="50dp" />
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Hours"
+                    android:textSize="15sp" />
 
+                <NumberPicker
+                    android:id="@+id/hourPicker"
+                    android:layout_width="60dp"
+                    android:layout_height="50dp" />
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Days"
+                    android:textSize="15sp" />
+
+                <NumberPicker
+                    android:id="@+id/dayPicker"
+                    android:layout_width="60dp"
+                    android:layout_height="50dp" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
         <Button
             android:id="@+id/button"
