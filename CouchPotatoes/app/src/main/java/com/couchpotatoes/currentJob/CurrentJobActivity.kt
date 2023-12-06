@@ -1,13 +1,11 @@
-package com.couchpotatoes
+package com.couchpotatoes.currentJob
 
-import android.Manifest
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.Color.rgb
 import android.os.Build
 import android.os.Bundle
@@ -19,6 +17,8 @@ import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.couchpotatoes.BaseActivity
+import com.couchpotatoes.R
 import com.couchpotatoes.classes.Job
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -28,7 +28,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.mikepenz.materialdrawer.icons.MaterialDrawerFont.description
 
 class CurrentJobActivity () : BaseActivity() {
 

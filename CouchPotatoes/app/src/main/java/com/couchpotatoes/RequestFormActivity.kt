@@ -9,9 +9,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.NumberPicker
-import android.widget.Toast
 import com.couchpotatoes.classes.Job
-import com.couchpotatoes.classes.User
+import com.couchpotatoes.currentJob.CurrentJobActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

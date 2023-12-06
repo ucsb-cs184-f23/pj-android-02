@@ -11,7 +11,7 @@ import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
 import com.couchpotatoes.BaseActivity
-import com.couchpotatoes.CurrentJobActivity
+import com.couchpotatoes.currentJob.CurrentJobActivity
 import com.couchpotatoes.R
 import com.couchpotatoes.classes.Job
 import com.google.firebase.auth.FirebaseAuth
