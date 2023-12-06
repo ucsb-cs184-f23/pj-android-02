@@ -255,7 +255,7 @@ class CurrentJobActivity () : BaseActivity() {
 
     private fun showNotification(status: String) {
         var builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.potato_icon)
+            .setSmallIcon(R.drawable.potato_logo)
             .setContentTitle("Status Change")
             .setContentText(status)
             .setStyle(NotificationCompat.BigTextStyle()
