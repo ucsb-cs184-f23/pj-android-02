@@ -90,7 +90,7 @@ class RequestFormActivity : BaseActivity() {
         val durationEditDays = findViewById<NumberPicker>(R.id.dayPicker)
         val durationDays = durationEditDays.value
         val categoryEdit = findViewById<Spinner>(R.id.categoryDropdown)
-        val category = categoryEdit.toString()
+        val category = categoryEdit.selectedItem.toString()
 
         val expirationTime = System.currentTimeMillis() + (durationHours * 60 * 60 * 1000) + (durationDays * 24 * 60 * 60 * 1000)
 
