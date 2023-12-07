@@ -81,13 +81,13 @@ class JobItemActivity : BaseActivity() {
                 // Reference to the user's currentJobs node
                 val currentJobsRef = Firebase.database.reference.child("users").child(user!!.uid).child("currentJobs")
 
-                currentJobsRef.addValueEventListener(object : ValueEventListener {
+                currentJobsRef.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val currentJobIds = snapshot.value as? MutableList<String> ?: mutableListOf()
-                        currentJobIds.add(job.uid.toString())
-
-                        // Update the list in Firebase
-                        currentJobsRef.setValue(currentJobIds)
+                        if (!currentJobIds.contains(job.uid.toString())) {
+                            currentJobIds.add(job.uid.toString())
+                            currentJobsRef.setValue(currentJobIds)
+                        }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
