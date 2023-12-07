@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.couchpotatoes.R
 import com.couchpotatoes.classes.Job
@@ -24,7 +23,7 @@ class  JobBoardAdapter (private val jobList: ArrayList<Job>) : RecyclerView.Adap
         init {
             // Define click listener for the ViewHolder's View
             textView = view.findViewById(R.id.job_item)
-            imageView = view.findViewById((R.id.jobIcon))
+            imageView = view.findViewById(R.id.jobIcon)
         }
 
         // Give functionality to more details button
@@ -54,11 +53,10 @@ class  JobBoardAdapter (private val jobList: ArrayList<Job>) : RecyclerView.Adap
 
         when (jobList[position].category.toString()) {
             "Groceries" -> viewHolder.imageView.setImageResource(R.drawable.grocery);
-            "Food" -> viewHolder.imageView.setImageResource(R.drawable.grocery)
-            "Other" -> viewHolder.imageView.setImageResource(R.drawable.grocery)
+            "Food" -> viewHolder.imageView.setImageResource(R.drawable.food)
+            "Other" -> viewHolder.imageView.setImageResource(R.drawable.other)
 
-            // Add more cases as needed
-            else -> viewHolder.imageView.setImageResource(R.drawable._787100)
+            else -> viewHolder.imageView.setImageResource(R.drawable.other)
         }
 
         // basic information to display on job card
