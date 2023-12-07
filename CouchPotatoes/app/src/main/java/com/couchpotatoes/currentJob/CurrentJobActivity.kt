@@ -17,9 +17,12 @@ import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.couchpotatoes.BaseActivity
 import com.couchpotatoes.R
 import com.couchpotatoes.classes.Job
+import com.couchpotatoes.classes.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,6 +36,10 @@ class CurrentJobActivity () : BaseActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
+
+    private lateinit var currentJobsRecyclerView: RecyclerView
+    private lateinit var currentJobsAdapter: CurrentJobsAdapter
+    private var jobsList = mutableListOf<Job>()
 
     private var CHANNEL_ID = "couch_potato_channel_id"
     private var NOTIFICATION_ID = 101
@@ -50,189 +57,45 @@ class CurrentJobActivity () : BaseActivity() {
 
         val user = FirebaseAuth.getInstance().currentUser
 
-        val detailsCard = findViewById<CardView>(R.id.detailsCard)
-        detailsCard.visibility = View.GONE
-        val emptyView = findViewById<TextView>(R.id.emptyView)
-        emptyView.visibility = View.VISIBLE
+        currentJobsRecyclerView = findViewById(R.id.currentJobsRecyclerView)
+        currentJobsRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        database.child("users").child(user!!.uid).child("currentJob").get()
-            .addOnSuccessListener { snapshot ->
-                val currentJobId = snapshot.value as? String
-                // Attach a listener to read the data at our posts reference
-                database.child("jobs").child(currentJobId.toString())
-                    .addValueEventListener(object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            Log.d("TAG", dataSnapshot.toString())
-                            val job = dataSnapshot.getValue<Job>()
-                            Log.d("TAG", job.toString())
-                                if (job == null || job.status == "complete") {
-                                    detailsCard.visibility = View.GONE
-                                    emptyView.text = "You have nothing to do"
-                                    Log.d("TAG", job?.status.toString())
-                                    if (job != null && user.email == job.requesterEmail) {
-                                        showNotification("Request has been completed")
-                                    }
-                                } else {
-                                    emptyView.visibility = View.GONE
-                                    detailsCard.visibility = View.VISIBLE
-                                    findViewById<TextView>(R.id.requesterName).text =
-                                        job?.requesterName
-                                    findViewById<TextView>(R.id.requesterEmail).text =
-                                        job?.requesterEmail
-                                    findViewById<TextView>(R.id.item).text = job?.item
-                                    findViewById<TextView>(R.id.price).text = job?.price
-                                    findViewById<TextView>(R.id.store).text = job?.store
-                                    findViewById<TextView>(R.id.deliveryAddress).text =
-                                        job?.deliveryAddress
-                                    findViewById<TextView>(R.id.status).text = job?.status
-                                    val cancelButton = findViewById<Button>(R.id.cancel)
-                                    val completeButton = findViewById<Button>(R.id.complete)
+        database.child("users").child(user!!.uid).child("currentJobs")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val currentJobIds = snapshot.value as? List<String> ?: listOf()
+                    fetchJobDetails(currentJobIds)
+                }
 
-                                    val dialogBuilder = AlertDialog.Builder(this@CurrentJobActivity)
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("FirebaseError", "Listener was cancelled, error: ${error.toException()}")
+                }
+            })
 
-                                    if (user.email == job.requesterEmail) { // You are the requester
+        // Fetch jobs from Firebase and update jobsList
+        fetchJobs(user?.email)
+    }
 
-                                        cancelButton.setOnClickListener {
-                                            dialogBuilder.setMessage("Are you sure you want to cancel this job?")
-                                                .setPositiveButton("Yes") { _, _ ->
-                                                    database.child("jobs")
-                                                        .child(currentJobId.toString())
-                                                        .removeValue()
-                                                    database.child("users").child(user!!.uid)
-                                                        .child("currentJob").setValue(null)
-                                                }
-                                                .setNegativeButton("No", null)
-                                                .show()
-                                        }
+    private fun fetchJobDetails(jobIds: List<String>) {
+        jobsList.clear()
+        for (jobId in jobIds) {
+            database.child("jobs").child(jobId)
+                .get()
+                .addOnSuccessListener { dataSnapshot ->
+                    // Assuming each job is a custom object, Job
+                    val job = dataSnapshot.getValue(Job::class.java)
+                    job?.let { jobsList.add(it) }
+                    currentJobsAdapter.notifyDataSetChanged()
+                }
+                .addOnFailureListener { exception ->
+                Log.e("FirebaseError", "Error fetching data", exception)
+                }
+        }
+    }
+    private fun fetchJobs(userEmail: String?) {
 
-                                        completeButton.setOnClickListener {
-                                            dialogBuilder.setMessage("Are you sure you want to mark this job as complete?")
-                                                .setPositiveButton("Yes") { _, _ ->
-                                                    database.child("jobs")
-                                                        .child(currentJobId.toString())
-                                                        .child("status")
-                                                        .setValue("complete")
-                                                    database.child("users").child(user!!.uid)
-                                                        .child("currentJob").setValue(null)
-                                                }
-                                                .setNegativeButton("No", null)
-                                                .show()
-                                        }
-
-                                        // Request Notification Permissions
-                                        if (ActivityCompat.checkSelfPermission(
-                                                this@CurrentJobActivity,
-                                                POST_NOTIFICATIONS
-                                            ) != PackageManager.PERMISSION_GRANTED
-                                        ) {
-                                            requestPermissions(arrayOf(POST_NOTIFICATIONS), 100)
-                                        }
-
-                                        // Send notification based on changed status
-                                        when (job?.status) {
-                                            "accepted" -> {
-                                                showNotification("Your request has been accepted")
-                                            }
-
-                                            "gathering" -> {
-                                                showNotification("Your hustler is now gathering")
-                                            }
-
-                                            "delivering" -> {
-                                                showNotification("Your hustler is now delivering")
-                                            }
-                                        }
-                                    } else { // You are the dasher
-                                        // Cancel Button
-
-                                        when (job?.status) {
-                                            "accepted" -> {
-                                                completeButton.text = "Gather"
-                                            }
-
-                                            "gathering" -> {
-                                                completeButton.text = "Deliver"
-                                            }
-
-                                            "delivering" -> {
-                                                completeButton.text = "Complete"
-                                            }
-                                        }
-
-                                        cancelButton.setOnClickListener {
-                                            dialogBuilder.setMessage("Are you sure you want to cancel this job?")
-                                                .setPositiveButton("Yes") { _, _ ->
-                                                    database.child("users").child(user!!.uid)
-                                                        .child("currentJob").setValue(null)
-                                                    database.child("jobs")
-                                                        .child(currentJobId.toString())
-                                                        .child("status")
-                                                        .setValue("pending")
-                                                    recreate()
-                                                }
-                                                .setNegativeButton("No", null)
-                                                .show()
-                                        }
-
-                                        if (job?.status == "accepted") {
-                                            // Gathering Button
-                                            completeButton.setBackgroundColor(rgb(0,0x66,0x66))
-                                            completeButton.setOnClickListener {
-                                                dialogBuilder.setMessage("Are you sure you want to mark this job as gathering?")
-                                                    .setPositiveButton("Yes") { _, _ ->
-                                                        database.child("jobs")
-                                                            .child(currentJobId.toString())
-                                                            .child("status")
-                                                            .setValue("gathering")
-                                                    }
-                                                    .setNegativeButton("No", null)
-                                                    .show()
-                                            }
-                                        }
-
-                                        if (job?.status == "gathering") {
-                                            // Delivering Button
-                                            completeButton.setBackgroundColor(rgb(0xC4,0x50,0x25))
-                                            completeButton.setOnClickListener {
-                                                dialogBuilder.setMessage("Are you sure you want to mark this job as delivering?")
-                                                    .setPositiveButton("Yes") { _, _ ->
-                                                        database.child("jobs")
-                                                            .child(currentJobId.toString())
-                                                            .child("status")
-                                                            .setValue("delivering")
-                                                    }
-                                                    .setNegativeButton("No", null)
-                                                    .show()
-                                            }
-                                        }
-
-                                        if (job?.status == "delivering") {
-                                            // Complete Button
-                                            completeButton.setBackgroundColor(rgb(0xEE,0x99,0x39))
-                                            completeButton.setOnClickListener {
-                                                dialogBuilder.setMessage("Are you sure you want to mark this job as complete?")
-                                                    .setPositiveButton("Yes") { _, _ ->
-                                                        database.child("jobs")
-                                                            .child(currentJobId.toString())
-                                                            .child("status")
-                                                            .setValue("complete")
-                                                        database.child("users").child(user!!.uid)
-                                                            .child("currentJob").setValue(null)
-                                                        recreate()
-                                                    }
-                                                    .setNegativeButton("No", null)
-                                                    .show()
-                                            }
-                                        }
-                                    }
-                                }
-                        }
-
-                        override fun onCancelled(databaseError: DatabaseError) {
-                            println("The read failed: " + databaseError.code)
-                        }
-                    })
-            }
+        currentJobsAdapter = CurrentJobsAdapter(jobsList, userEmail)
+        currentJobsRecyclerView.adapter = currentJobsAdapter
     }
 
     private fun createNotificationChannel() {
