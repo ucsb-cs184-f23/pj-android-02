@@ -60,7 +60,7 @@ class  JobBoardAdapter (private val jobList: ArrayList<Job>) : RecyclerView.Adap
         }
 
         // basic information to display on job card
-        val display = "Store: ${jobList[position].category.toString()}${jobList[position].store.toString()}\nPay for Job: \$${jobList[position].price.toString()}\nAddress: ${jobList[position].deliveryAddress.toString()}"
+        val display = "Store: ${jobList[position].store.toString()}\nPay for Job: \$${jobList[position].price.toString()}\nAddress: ${jobList[position].deliveryAddress.toString()}"
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
