@@ -98,10 +98,8 @@ class CurrentRequestsAdapter(
                                 .setPositiveButton("Yes") { _ , _ ->
                                     job?.uid.let { uid ->
                                         if (uid != null) {
-                                            database.child("jobs").child(uid).child("status")
-                                                .setValue("complete")
+                                            database.child("jobs").child(uid).removeValue()
                                         }
-
                                         currentRequestsIds.remove(uid)
                                         Log.d("current", currentRequestsIds.toString())
                                         // Update the new job list in the user's 'currentJobs' in Firebase
