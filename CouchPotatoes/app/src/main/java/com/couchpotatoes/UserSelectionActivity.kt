@@ -2,10 +2,17 @@ package com.couchpotatoes
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Button
+import android.widget.RatingBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.couchpotatoes.jobBoard.JobBoardActivity
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
@@ -43,6 +50,65 @@ class UserSelectionActivity : BaseActivity() {
             val intent = Intent(this, JobBoardActivity::class.java)
             startActivity(intent)
         }
+        checkReviewList()
+    }
 
+    private fun checkReviewList() {
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+        var reviewList = mutableListOf<String>()
+        database.child("users").child(userId).child("usersToReview").get().addOnSuccessListener { snapshot ->
+            val list = snapshot.value as? MutableList<String>
+            if (list != null) {
+                reviewList.addAll(list)
+                showNextRating(reviewList, 0)
+            }
+        }
+        database.child("users").child(userId).child("usersToReview").setValue(null)
+    }
+
+    private fun showNextRating(reviewList: MutableList<String>, index: Int) {
+        if (index >= reviewList.size) return // Exit if no more items
+
+        val currentUserId = reviewList[index]
+
+        val bottomSheetDialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.activity_rating_system, null)
+        bottomSheetDialog.setContentView(view)
+
+        // Set the height of the bottom sheet
+        val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+        val layoutParams = bottomSheet?.layoutParams
+        layoutParams?.height = 800
+        bottomSheet?.layoutParams = layoutParams
+
+        val closeButton = view.findViewById<Button>(R.id.ratingCloseButton)
+        closeButton.setOnClickListener {
+            showNextRating(reviewList, index + 1)
+            bottomSheetDialog.dismiss()
+        }
+
+        val ratingBar = view.findViewById<RatingBar>(R.id.ratingBar)
+        var deliveryRating = 0.0
+        ratingBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
+            // Use the rating value. It will be a value between 1 and 5.
+            deliveryRating = rating.toDouble()
+        }
+
+        val submitButton = view.findViewById<Button>(R.id.ratingSubmitButton)
+        submitButton.setOnClickListener{
+            database.child("users").child(currentUserId).child("Rating").get().addOnSuccessListener { snapshot ->
+                val currentRating = snapshot.value as? Double
+                if (currentRating != null) {
+                    database.child("users").child(currentUserId).child("Rating").setValue((deliveryRating + currentRating) / 2)
+                }
+                else {
+                    database.child("users").child(currentUserId).child("Rating").setValue(deliveryRating)
+                }
+            }
+            showNextRating(reviewList, index + 1)
+            bottomSheetDialog.dismiss()
+        }
+        bottomSheetDialog.show()
     }
 }

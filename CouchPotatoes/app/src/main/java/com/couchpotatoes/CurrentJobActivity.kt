@@ -1,25 +1,26 @@
 package com.couchpotatoes
 
-import android.Manifest
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.Color.rgb
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.couchpotatoes.classes.Job
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -28,7 +29,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.mikepenz.materialdrawer.icons.MaterialDrawerFont.description
 
 class CurrentJobActivity () : BaseActivity() {
 
@@ -219,7 +219,7 @@ class CurrentJobActivity () : BaseActivity() {
                                                             .setValue("complete")
                                                         database.child("users").child(user!!.uid)
                                                             .child("currentJob").setValue(null)
-                                                        recreate()
+                                                        showBottomSheetDialog()
                                                     }
                                                     .setNegativeButton("No", null)
                                                     .show()
@@ -289,5 +289,69 @@ class CurrentJobActivity () : BaseActivity() {
             }
             notify(NOTIFICATION_ID, builder.build())
         }
+    }
+
+    private fun showBottomSheetDialog() {
+        val bottomSheetDialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.activity_rating_system, null)
+        bottomSheetDialog.setContentView(view)
+
+        // Set the height of the bottom sheet
+        val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+        val layoutParams = bottomSheet?.layoutParams
+        layoutParams?.height = 800
+        bottomSheet?.layoutParams = layoutParams
+
+        val closeButton = view.findViewById<Button>(R.id.ratingCloseButton)
+        closeButton.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+
+        val ratingBar = view.findViewById<RatingBar>(R.id.ratingBar)
+        var deliveryRating = 0.0
+        ratingBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
+            // Use the rating value. It will be a value between 1 and 5.
+            deliveryRating = rating.toDouble()
+        }
+
+        val submitButton = view.findViewById<Button>(R.id.ratingSubmitButton)
+        submitButton.setOnClickListener{
+            val userId = FirebaseAuth.getInstance().currentUser!!.uid
+            var currentJobId = ""
+            var revieweeUserId = ""
+
+            database.child("users").child(userId).child("currentJob").get().addOnSuccessListener { snapshot ->
+                currentJobId = (snapshot.value).toString()
+            }
+
+            database.child("jobs").child(currentJobId).child("userId").get().addOnSuccessListener { snapshot ->
+                revieweeUserId = (snapshot.value).toString()
+            }
+
+            database.child("users").child(revieweeUserId).child("Rating").get().addOnSuccessListener { snapshot ->
+                val currentRating = snapshot.value as? Double
+                if (currentRating != null) {
+                    database.child("users").child(revieweeUserId).child("Rating").setValue((deliveryRating + currentRating) / 2)
+                }
+                else {
+                    database.child("users").child(revieweeUserId).child("Rating").setValue(deliveryRating)
+                }
+            }
+
+            database.child("users").child(revieweeUserId).child("usersToReview").get().addOnSuccessListener { snapshot ->
+                val reviewList = snapshot.value as? MutableList<String>
+                if (reviewList != null) {
+                    reviewList.add(userId)
+                    database.child("users").child(revieweeUserId).child("usersToReview").setValue(reviewList)
+                }
+                else {
+                    database.child("users").child(revieweeUserId).child("usersToReview").setValue(
+                        mutableListOf(userId)
+                    )
+                }
+            }
+            bottomSheetDialog.dismiss()
+        }
+        bottomSheetDialog.show()
     }
 }
