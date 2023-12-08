@@ -34,6 +34,7 @@
         <activity android:name=".jobBoard.JobBoardActivity" />
         <activity android:name=".jobBoard.JobItemActivity" />
         <activity android:name=".CurrentJobActivity" />
+        <activity android:name=".currentRequest.CurrentRequestActivity"/>
     </application>
 
 </manifest>

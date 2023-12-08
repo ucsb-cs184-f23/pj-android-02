@@ -9,9 +9,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.NumberPicker
-import android.widget.Toast
 import com.couchpotatoes.classes.Job
-import com.couchpotatoes.classes.User
+import com.couchpotatoes.currentRequest.CurrentRequestActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -103,7 +102,25 @@ class RequestFormActivity : BaseActivity() {
             val user = FirebaseAuth.getInstance().currentUser
 
             database.child("jobs").child(jobId).setValue(job)
-            database.child("users").child(user!!.uid).child("currentJob").setValue(job.uid.toString())
+//            database.child("users").child(user!!.uid).child("currentRequests").setValue(job.uid.toString())
+
+            val currentRequestRef = Firebase.database.reference.child("users").child(user!!.uid).child("currentRequests")
+
+            currentRequestRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val currentRequestIds = snapshot.value as? MutableList<String> ?: mutableListOf()
+                    if (!currentRequestIds.contains(job.uid.toString())) {
+                        currentRequestIds.add(job.uid.toString())
+                        currentRequestRef.setValue(currentRequestIds)
+                    }
+
+                    // Redirect to Current Job Page
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("FirebaseError", "Listener was cancelled, error: ${error.toException()}")
+                }
+            })
 
             val confirmationPopup = Popup(this)
             confirmationPopup.showConfirm()
@@ -157,7 +174,7 @@ class Popup(private val context: Context) {
         okButton.setOnClickListener {
             dialog.dismiss()
             // Redirect to Current Job Page
-            val intent = Intent(context, CurrentJobActivity::class.java)
+            val intent = Intent(context, CurrentRequestActivity::class.java)
             context.startActivity(intent)
         }
 

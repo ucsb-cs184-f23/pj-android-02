@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import co.zsmb.materialdrawerkt.builders.drawer
 import co.zsmb.materialdrawerkt.builders.footer
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
+import com.couchpotatoes.currentRequest.CurrentRequestActivity
 import com.couchpotatoes.jobBoard.JobBoardActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -56,6 +57,7 @@ open class BaseActivity : AppCompatActivity() {
                             false
                         }
                     }
+
                     primaryItem("Job Board") {
                         onClick { _ ->
                             val intent = Intent(context, JobBoardActivity::class.java)
@@ -63,10 +65,20 @@ open class BaseActivity : AppCompatActivity() {
                             false
                         }
                     }
+
                 }
 
                 if (it.value.toString() == "requester") {
                     // put everything for now, will separate based on role later
+
+                    primaryItem("Current Request") {
+                        onClick { _ ->
+                            val intent = Intent(context, CurrentRequestActivity::class.java)
+                            startActivity(intent)
+                            false
+                        }
+                    }
+
                     primaryItem("Request Form") {
                         onClick { _ ->
                             val intent = Intent(context, RequestFormActivity::class.java)
@@ -74,6 +86,7 @@ open class BaseActivity : AppCompatActivity() {
                             false
                         }
                     }
+
                 }
 
                 footer {
