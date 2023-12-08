@@ -2,16 +2,22 @@ package com.couchpotatoes.currentJob
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RatingBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.couchpotatoes.classes.Job
 import com.couchpotatoes.R
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,7 +27,8 @@ import com.google.firebase.database.getValue
 
 
 // Gotta show dialog
-class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
+class CurrentJobsAdapter(private val context: Context,
+                         private val jobsList: MutableList<Job>,
                          private val currentJobIds: MutableList<String>,
                          private val userEmail: String?,
                          private val auth: FirebaseAuth,
@@ -65,7 +72,9 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
 
                         if (job?.requesterEmail == userEmail) {
                             holder.completeButton.isEnabled = false
-                            holder.completeButton.text = "Your Request"
+                            holder.completeButton.visibility = View.GONE
+                            val color = ContextCompat.getColor(context, R.color.aqua)
+                            holder.cancelButton.backgroundTintList = ColorStateList.valueOf(color)
                             when (job?.status) {
                                 "accepted" -> {
                                     holder.completeButton.text = "Accepted"
@@ -156,6 +165,11 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
                                                     auth.currentUser?.uid?.let { userId ->
                                                         database.child("users").child(userId).child("currentJobs").setValue(currentJobIds)
                                                     }
+
+                                                    if (uid != null) {
+                                                        showBottomSheetDialog(uid)
+                                                        setReviewList(uid)
+                                                    }
                                                 }
                                             }
                                             notificationCallback("Job status updated to $nextStatus")
@@ -181,4 +195,78 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
 
 
     override fun getItemCount() = jobsList.size
+
+    private fun showBottomSheetDialog(uid: String) {
+        val bottomSheetDialog = BottomSheetDialog(context)
+        val inflater = LayoutInflater.from(context)
+        val view = inflater.inflate(R.layout.activity_rating_system, null)
+        bottomSheetDialog.setContentView(view)
+
+        // Set the height of the bottom sheet
+        val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+        val layoutParams = bottomSheet?.layoutParams
+        layoutParams?.height = 800
+        bottomSheet?.layoutParams = layoutParams
+
+        val closeButton = view.findViewById<Button>(R.id.ratingCloseButton)
+        closeButton.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+
+        val ratingBar = view.findViewById<RatingBar>(R.id.ratingBar)
+        var deliveryRating = 0.0
+        ratingBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
+            // Use the rating value. It will be a value between 1 and 5.
+            deliveryRating = rating.toDouble()
+        }
+
+        val submitButton = view.findViewById<Button>(R.id.ratingSubmitButton)
+        submitButton.setOnClickListener{
+            database.child("jobs").child(uid).child("userId").get().addOnSuccessListener { snapshot ->
+                val idToReview = (snapshot.value).toString()
+
+                database.child("users").child(idToReview).child("totalJobs").get().addOnSuccessListener { snapshot ->
+                    var totalJobs = (snapshot.value as? Long) ?: 0
+
+                    database.child("users").child(idToReview).child("totalRating").get().addOnSuccessListener { snapshot ->
+                        var totalRating = snapshot.value as? Double ?: (snapshot.value as? Long)?.toDouble()
+
+                        if (totalRating != null) {
+                            database.child("users").child(idToReview).child("rating").setValue((totalRating + deliveryRating) / (totalJobs + 1))
+                            database.child("users").child(idToReview).child("totalJobs").setValue(totalJobs + 1)
+                            database.child("users").child(idToReview).child("totalRating").setValue(totalRating + deliveryRating)
+                        }
+                        else {
+                            database.child("users").child(idToReview).child("rating").setValue(deliveryRating)
+                            database.child("users").child(idToReview).child("totalJobs").setValue(totalJobs + 1)
+                            database.child("users").child(idToReview).child("totalRating").setValue(deliveryRating)
+                        }
+                    }
+                }
+            }
+            bottomSheetDialog.dismiss()
+        }
+        bottomSheetDialog.show()
+    }
+
+    private fun setReviewList(uid: String) {
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+        database.child("jobs").child(uid).child("userId").get().addOnSuccessListener { snapshot ->
+            val idToReview = snapshot.value.toString()
+
+            database.child("users").child(idToReview).child("usersToReview").get().addOnSuccessListener { snapshot ->
+                val reviewList = snapshot.value as? MutableList<String>
+
+                if (reviewList != null) {
+                    reviewList.add(userId)
+                    database.child("users").child(idToReview).child("usersToReview").setValue(reviewList)
+                }
+                else {
+                    database.child("users").child(idToReview).child("usersToReview").setValue(
+                        mutableListOf(userId))
+                }
+            }
+        }
+    }
 }

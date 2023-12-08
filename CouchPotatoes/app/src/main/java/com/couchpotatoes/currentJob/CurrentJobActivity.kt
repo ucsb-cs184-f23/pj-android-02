@@ -107,7 +107,7 @@ class CurrentJobActivity () : BaseActivity() {
 
     private fun fetchJobs(userEmail: String?) {
         Log.d("fetchJobs", currentJobIds.toString())
-        currentJobsAdapter = CurrentJobsAdapter(jobsList, currentJobIds, userEmail, auth, database, this::showNotification)
+        currentJobsAdapter = CurrentJobsAdapter(this, jobsList, currentJobIds, userEmail, auth, database, this::showNotification)
         currentJobsRecyclerView.adapter = currentJobsAdapter
     }
 

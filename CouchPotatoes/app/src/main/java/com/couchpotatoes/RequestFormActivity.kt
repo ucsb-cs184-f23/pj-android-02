@@ -111,7 +111,8 @@ class RequestFormActivity : BaseActivity() {
                 address,
                 expirationTime,
                 category,
-                "pending")
+                "pending",
+                FirebaseAuth.getInstance().currentUser!!.uid)
 
             val user = FirebaseAuth.getInstance().currentUser
 

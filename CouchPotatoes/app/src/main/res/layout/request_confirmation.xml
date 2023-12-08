@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="224dp"
-        android:layout_height="77dp"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,6 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:backgroundTint="@color/aqua"
+            android:layout_marginTop="10dp"
             android:onClick="onOkClicked"
             android:text="OK" />
 
