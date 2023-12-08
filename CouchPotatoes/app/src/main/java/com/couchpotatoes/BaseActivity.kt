@@ -3,13 +3,13 @@ package com.couchpotatoes
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import co.zsmb.materialdrawerkt.builders.drawer
 import co.zsmb.materialdrawerkt.builders.footer
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import com.couchpotatoes.currentRequest.CurrentRequestActivity
+import com.couchpotatoes.currentJob.CurrentJobActivity
 import com.couchpotatoes.jobBoard.JobBoardActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions

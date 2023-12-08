@@ -26,12 +26,20 @@
 
             <TextView
                 android:id="@+id/job_item"
-                android:layout_width="190dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:paddingTop="5dp"
                 android:gravity="left"
                 android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/jobIcon"
+                android:padding="8dp"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:src="@drawable/other"
+            />
 
             <Button
                 android:id="@+id/moreDetailsButton"

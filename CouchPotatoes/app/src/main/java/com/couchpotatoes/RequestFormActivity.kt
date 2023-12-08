@@ -6,11 +6,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.NumberPicker
 import com.couchpotatoes.classes.Job
 import com.couchpotatoes.currentRequest.CurrentRequestActivity
+import android.widget.Spinner
+import android.widget.Toast
+import com.couchpotatoes.classes.Job
+import com.couchpotatoes.currentJob.CurrentJobActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -35,6 +42,12 @@ class RequestFormActivity : BaseActivity() {
         val userId = auth.currentUser!!.uid
 
         createNavMenu(R.id.my_toolbar, this, auth)
+
+        val categoryDropdown = findViewById<Spinner>(R.id.categoryDropdown)
+
+        val categories = arrayOf("Groceries", "Food", "Other")
+        val arrayAdp = ArrayAdapter(this@RequestFormActivity, android.R.layout.simple_spinner_dropdown_item, categories)
+        categoryDropdown.adapter = arrayAdp
 
         val hourPicker = findViewById<NumberPicker>(R.id.hourPicker)
         val dayPicker = findViewById<NumberPicker>(R.id.dayPicker)
@@ -78,6 +91,8 @@ class RequestFormActivity : BaseActivity() {
         val durationHours = durationEditHours.value
         val durationEditDays = findViewById<NumberPicker>(R.id.dayPicker)
         val durationDays = durationEditDays.value
+        val categoryEdit = findViewById<Spinner>(R.id.categoryDropdown)
+        val category = categoryEdit.selectedItem.toString()
 
         val expirationTime = System.currentTimeMillis() + (durationHours * 60 * 60 * 1000) + (durationDays * 24 * 60 * 60 * 1000)
 
@@ -97,6 +112,7 @@ class RequestFormActivity : BaseActivity() {
                 where,
                 address,
                 expirationTime,
+                category,
                 "pending")
 
             val user = FirebaseAuth.getInstance().currentUser
@@ -122,6 +138,12 @@ class RequestFormActivity : BaseActivity() {
                 }
             })
 
+            database.child("users").child(user!!.uid).child("currentJobs").get().addOnSuccessListener { dataSnapshot ->
+                val jobs = dataSnapshot.value as? MutableList<String> ?: mutableListOf()
+                job.uid?.let { jobs.add(it) }
+                database.child("users").child(user!!.uid).child("currentJobs").setValue(jobs)
+            }
+            
             val confirmationPopup = Popup(this)
             confirmationPopup.showConfirm()
         }

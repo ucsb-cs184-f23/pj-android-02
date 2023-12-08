@@ -6,190 +6,27 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current Jobs"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2"
-        android:textSize="20sp"
-        android:text="Current Job"
-        android:textStyle="bold"/>
+        app:layout_constraintVertical_bias="0.125" />
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="326dp"
-        android:layout_height="250dp"
-        android:id="@+id/detailsCard"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:id="@+id/detailsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="20dp"
-            android:spacing="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.4">
-
-            <!-- Requester Name -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Requester Name: " />
-                <TextView
-                    android:id="@+id/requesterName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:gravity="right"
-                    android:text="Name"/>
-            </LinearLayout>
-
-            <!-- Requester Email -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Requester Email: " />
-                <TextView
-                    android:id="@+id/requesterEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:gravity="right"
-                    android:text="Email"/>
-            </LinearLayout>
-
-            <!-- Item -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Item: " />
-                <TextView
-                    android:id="@+id/item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:gravity="right"
-                    android:text="Item"/>
-            </LinearLayout>
-
-            <!-- Price -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Price: " />
-                <TextView
-                    android:id="@+id/price"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:gravity="right"
-                    android:text="Price"/>
-            </LinearLayout>
-
-            <!-- Store -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Store: " />
-                <TextView
-                    android:id="@+id/store"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:gravity="right"
-                    android:text="Store"/>
-            </LinearLayout>
-
-            <!-- Delivery Address -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Delivery Address: " />
-                <TextView
-                    android:id="@+id/deliveryAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:gravity="right"
-                    android:text="Delivery Address"/>
-            </LinearLayout>
-
-            <!-- Status -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status: " />
-                <TextView
-                    android:id="@+id/status"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:gravity="right"
-                    android:text="Status"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="15dp">
-                <Button
-                    android:id="@+id/cancel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/orange"
-                    android:layout_weight="1"
-                    android:text="Cancel"
-                    android:layout_marginRight="10dp"/>
-                <Button
-                    android:id="@+id/complete"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/orange"
-                    android:layout_weight="1"
-                    android:text="Complete"
-                    android:layout_marginLeft="10dp"/>
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/emptyView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/currentJobsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="You have nothing to do"
-        android:textSize="18sp"
+        android:layout_height="0dp"
+        android:layout_margin="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:layout_editor_absoluteX="8dp"
+        tools:listitem="@layout/current_job_item"/>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
