@@ -121,6 +121,28 @@ class UserSelectionActivity : BaseActivity() {
                 else {
                     database.child("users").child(currentUserId).child("Rating").setValue(deliveryRating)
                 }
+
+                database.child("users").child(currentUserId).child("totalJobs").get().addOnSuccessListener { snapshot ->
+                    val total = snapshot.value as? Int
+                    if (total != null) {
+                        database.child("users").child(currentUserId).child("totalJobs")
+                            .setValue(total + 1)
+                    } else {
+                        database.child("users").child(currentUserId).child("totalJobs").setValue(1)
+                    }
+
+                    database.child("users").child(currentUserId).child("totalRatings").get()
+                        .addOnSuccessListener { snapshot ->
+                            val total = snapshot.value as? Int
+                            if (total != null) {
+                                database.child("users").child(currentUserId).child("totalRatings")
+                                    .setValue(total + deliveryRating)
+                            } else {
+                                database.child("users").child(currentUserId).child("totalRatings")
+                                    .setValue(deliveryRating)
+                            }
+                        }
+                    }
             }
             showNextRating(reviewList, index + 1)
             bottomSheetDialog.dismiss()

@@ -217,8 +217,6 @@ class CurrentJobActivity () : BaseActivity() {
                                                             .child(currentJobId.toString())
                                                             .child("status")
                                                             .setValue("complete")
-                                                        database.child("users").child(user!!.uid)
-                                                            .child("currentJob").setValue(null)
                                                         showBottomSheetDialog()
                                                     }
                                                     .setNegativeButton("No", null)
@@ -317,53 +315,74 @@ class CurrentJobActivity () : BaseActivity() {
         val submitButton = view.findViewById<Button>(R.id.ratingSubmitButton)
         submitButton.setOnClickListener{
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
-            var currentJobId = ""
-            var revieweeUserId = ""
-            var totalJobs = 0
-            var totalRating = 0
 
             database.child("users").child(userId).child("currentJob").get().addOnSuccessListener { snapshot ->
-                currentJobId = (snapshot.value).toString()
-            }
+                val currentJobId = (snapshot.value).toString()
 
-            database.child("jobs").child(currentJobId).child("userId").get().addOnSuccessListener { snapshot ->
-                revieweeUserId = (snapshot.value).toString()
-            }
+                database.child("jobs").child(currentJobId).child("userId").get().addOnSuccessListener { snapshot ->
+                    val revieweeUserId = (snapshot.value).toString()
 
-            database.child("users").child(revieweeUserId).child("totalJobs").get().addOnSuccessListener { snapshot ->
-                val total = snapshot.value as? Int
-                if (total != null) {
-                    totalJobs = total
-                }
-            }
+                    database.child("users").child(revieweeUserId).child("totalJobs").get().addOnSuccessListener { snapshot ->
+                        val total = snapshot.value as? Int
+                        var totalJobs = 0
+                        if (total != null) {
+                            totalJobs = total
+                        }
 
-            database.child("users").child(revieweeUserId).child("totalRating").get().addOnSuccessListener { snapshot ->
-                val total = snapshot.value as? Int
-                if (total != null) {
-                    totalRating = total
-                }
-            }
+                        database.child("users").child(revieweeUserId).child("totalRating").get().addOnSuccessListener { snapshot ->
+                            val total = snapshot.value as? Int
+                            var totalRating = 0
+                            if (total != null) {
+                                totalRating = total
+                            }
 
-            database.child("users").child(revieweeUserId).child("Rating").get().addOnSuccessListener { snapshot ->
-                val currentRating = snapshot.value as? Double
-                if (currentRating != null) {
-                    database.child("users").child(revieweeUserId).child("Rating").setValue((deliveryRating + totalRating) / totalJobs)
-                }
-                else {
-                    database.child("users").child(revieweeUserId).child("Rating").setValue(deliveryRating)
-                }
-            }
+                            database.child("users").child(revieweeUserId).child("Rating").get().addOnSuccessListener { snapshot ->
+                                val currentRating = snapshot.value as? Double
+                                if (currentRating != null) {
+                                    database.child("users").child(revieweeUserId).child("Rating").setValue((deliveryRating + totalRating) / totalJobs)
+                                }
+                                else {
+                                    database.child("users").child(revieweeUserId).child("Rating").setValue(deliveryRating)
+                                }
 
-            database.child("users").child(revieweeUserId).child("usersToReview").get().addOnSuccessListener { snapshot ->
-                val reviewList = snapshot.value as? MutableList<String>
-                if (reviewList != null) {
-                    reviewList.add(userId)
-                    database.child("users").child(revieweeUserId).child("usersToReview").setValue(reviewList)
-                }
-                else {
-                    database.child("users").child(revieweeUserId).child("usersToReview").setValue(
-                        mutableListOf(userId)
-                    )
+                                database.child("users").child(revieweeUserId).child("usersToReview").get().addOnSuccessListener { snapshot ->
+                                    val reviewList = snapshot.value as? MutableList<String>
+                                    if (reviewList != null) {
+                                        reviewList.add(userId)
+                                        database.child("users").child(revieweeUserId).child("usersToReview").setValue(reviewList)
+                                    }
+                                    else {
+                                        database.child("users").child(revieweeUserId).child("usersToReview").setValue(
+                                            mutableListOf(userId)
+                                        )
+                                    }
+
+                                    database.child("users").child(revieweeUserId).child("totalJobs").get().addOnSuccessListener { snapshot ->
+                                        val total = snapshot.value as? Int
+                                        if (total != null) {
+                                            database.child("users").child(revieweeUserId).child("totalJobs").setValue(total + 1)
+                                        }
+                                        else {
+                                            database.child("users").child(revieweeUserId).child("totalJobs").setValue(1)
+                                        }
+
+                                        database.child("users").child(revieweeUserId).child("totalRatings").get().addOnSuccessListener { snapshot ->
+                                            val total = snapshot.value as? Int
+                                            if (total != null) {
+                                                database.child("users").child(revieweeUserId).child("totalRatings").setValue(total + deliveryRating)
+                                            }
+                                            else {
+                                                database.child("users").child(revieweeUserId).child("totalRatings").setValue(deliveryRating)
+                                            }
+
+                                            database.child("users").child(userId)
+                                                .child("currentJob").setValue(null)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             bottomSheetDialog.dismiss()
