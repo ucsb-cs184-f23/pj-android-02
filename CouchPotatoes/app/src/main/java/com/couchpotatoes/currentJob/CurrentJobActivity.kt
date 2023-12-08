@@ -78,13 +78,16 @@ class CurrentJobActivity () : BaseActivity() {
     }
 
     private fun fetchJobDetails(jobIds: List<String>) {
+        // Use a set for deduplication
+        val uniqueJobIds = jobIds.toSet()
+
         jobsList.clear()
-        for (jobId in jobIds) {
+        uniqueJobIds.forEach { jobId ->
             database.child("jobs").child(jobId)
                 .get()
                 .addOnSuccessListener { dataSnapshot ->
                     val job = dataSnapshot.getValue(Job::class.java)
-                    if (job != null && job.status != "complete") {
+                    if (job != null && job.status != "complete" && !jobsList.contains(job)) {
                         jobsList.add(job)
                     }
                     currentJobsAdapter.notifyDataSetChanged()
@@ -93,6 +96,13 @@ class CurrentJobActivity () : BaseActivity() {
                     Log.e("FirebaseError", "Error fetching data", exception)
                 }
         }
+    }
+
+    private fun onDataChange(snapshot: DataSnapshot) {
+        // Keep it as a list but remove duplicates by converting to set and back
+        currentJobIds = snapshot.children.mapNotNull { it.key }.toSet().toMutableList()
+        fetchJobDetails(currentJobIds)
+        // Other logic remains the same
     }
 
     private fun fetchJobs(userEmail: String?) {

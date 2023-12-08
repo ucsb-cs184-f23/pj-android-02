@@ -92,7 +92,15 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
                             holder.completeButton.text = "Complete"
                             holder.completeButton.setBackgroundColor(Color.rgb(0xEE, 0x99, 0x39))
                         }
+                        else if (job?.status == "completed") {
+                            currentJobIds.remove(job?.uid)
 
+                            Log.d("current", currentJobIds.toString())
+                            // Update the new job list in the user's 'currentJobs' in Firebase
+                            auth.currentUser?.uid?.let { userId ->
+                                database.child("users").child(userId).child("currentJobs").setValue(currentJobIds)
+                            }
+                        }
                         holder.cancelButton.setOnClickListener {
                             AlertDialog.Builder(it.context)
                                 .setTitle("Cancel Job")
