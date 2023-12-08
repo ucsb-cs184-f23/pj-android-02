@@ -49,6 +49,7 @@ class JobBoardActivity : BaseActivity() {
                             job.store = ds.child("store").getValue<String?>().toString()
                             job.uid = ds.child("uid").getValue<String?>().toString()
                             job.expirationTime = ds.child("expirationTime").getValue<Long?>()
+                            job.category = ds.child("category").getValue<String?>().toString()
                             jobList.add(job)
                         }
                         else{
