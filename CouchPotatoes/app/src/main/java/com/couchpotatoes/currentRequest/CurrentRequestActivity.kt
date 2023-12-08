@@ -1,7 +1,16 @@
 package com.couchpotatoes.currentRequest
 
+import android.Manifest.permission.POST_NOTIFICATIONS
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.couchpotatoes.BaseActivity
@@ -25,9 +34,14 @@ class CurrentRequestActivity () : BaseActivity() {
     private var requestsList = mutableListOf<Job>()
     private var currentRequestsIds = mutableListOf<String>()
 
+    private var CHANNEL_ID = "couch_potato_channel_id"
+    private var NOTIFICATION_ID = 101
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_current_request)
+
+        createNotificationChannel()
 
         auth = FirebaseAuth.getInstance()
         database = Firebase.database.reference
@@ -55,8 +69,9 @@ class CurrentRequestActivity () : BaseActivity() {
     }
 
     private fun fetchRequestDetails(requestIds: List<String>) {
+        val uniqueRequestsIds = requestIds.toSet()
         requestsList.clear()
-        for (requestId in requestIds) {
+        uniqueRequestsIds.forEach { requestId ->
             database.child("jobs").child(requestId)
                 .get()
                 .addOnSuccessListener { dataSnapshot ->
@@ -72,12 +87,62 @@ class CurrentRequestActivity () : BaseActivity() {
         }
     }
 
+    private fun onDataChange(snapshot: DataSnapshot) {
+        // Keep it as a list but remove duplicates by converting to set and back
+        currentRequestsIds = snapshot.children.mapNotNull { it.key }.toSet().toMutableList()
+        fetchRequestDetails(currentRequestsIds)
+        // Other logic remains the same
+    }
+
     private fun fetchRequests(userEmail: String?) {
         Log.d("fetchJobs", currentRequestsIds.toString())
-        currentRequestsAdapter = CurrentRequestsAdapter(requestsList, currentRequestsIds, userEmail, auth, database)
+        currentRequestsAdapter = CurrentRequestsAdapter(requestsList, currentRequestsIds, userEmail, auth, database, this::showNotification)
         currentRequestsRecyclerView.adapter = currentRequestsAdapter
     }
 
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is not in the Support Library.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Couch Potato"
+            val descriptionText = "Status changed"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system.
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 
+    private fun showNotification(status: String) {
+        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.potato_logo)
+            .setContentTitle("Status Change")
+            .setContentText(status)
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText(status))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
+        with (NotificationManagerCompat.from(this)) {
+            if (ActivityCompat.checkSelfPermission(
+                    this@CurrentRequestActivity,
+                    POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(arrayOf(POST_NOTIFICATIONS), 100)
+                Log.d("TAG", "no permission")
+                if (ActivityCompat.checkSelfPermission(
+                        this@CurrentRequestActivity,
+                        POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
+            }
+            notify(NOTIFICATION_ID, builder.build())
+        }
+    }
 }

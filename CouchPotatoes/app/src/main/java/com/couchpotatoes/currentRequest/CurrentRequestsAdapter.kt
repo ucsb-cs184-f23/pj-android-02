@@ -23,7 +23,7 @@ class CurrentRequestsAdapter(
     private val userEmail: String?,
     private val auth: FirebaseAuth,
     private val database: DatabaseReference,
-) : RecyclerView.Adapter<CurrentRequestsAdapter.ViewHolder>() {
+    private val notificationCallback: (String) -> Unit) : RecyclerView.Adapter<CurrentRequestsAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val requesterName: TextView = view.findViewById<TextView>(R.id.requesterName)
@@ -81,10 +81,12 @@ class CurrentRequestsAdapter(
                                             if (uid != null) {
                                                 database.child("jobs").child(uid).removeValue()
                                             }
+                                            notificationCallback("Job cancelled by requester")
                                         } else {
                                             if (uid != null) {
                                                 database.child("jobs").child(uid).child("status").setValue("pending")
                                             }
+                                            notificationCallback("Job cancelled by dasher")
                                         }
                                     }
                                 }
@@ -109,7 +111,7 @@ class CurrentRequestsAdapter(
                                                 .setValue(currentRequestsIds)
                                         }
                                     }
-
+                                    notificationCallback("Job marked as completed by requester")
                                 }
 
                                 .setNegativeButton("No", null)
