@@ -16,7 +16,6 @@ import com.couchpotatoes.classes.Job
 import com.couchpotatoes.currentRequest.CurrentRequestActivity
 import android.widget.Spinner
 import android.widget.Toast
-import com.couchpotatoes.classes.Job
 import com.couchpotatoes.currentJob.CurrentJobActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
