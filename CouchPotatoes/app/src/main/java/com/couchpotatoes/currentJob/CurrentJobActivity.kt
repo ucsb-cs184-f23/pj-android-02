@@ -60,10 +60,11 @@ class CurrentJobActivity () : BaseActivity() {
         currentJobsRecyclerView = findViewById(R.id.currentJobsRecyclerView)
         currentJobsRecyclerView.layoutManager = LinearLayoutManager(this)
 
+        var currentJobIds: List<String> = listOf()
         database.child("users").child(user!!.uid).child("currentJobs")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val currentJobIds = snapshot.value as? List<String> ?: listOf()
+                    currentJobIds = snapshot.value as? List<String> ?: listOf()
                     fetchJobDetails(currentJobIds)
                 }
 
@@ -73,7 +74,7 @@ class CurrentJobActivity () : BaseActivity() {
             })
 
         // Fetch jobs from Firebase and update jobsList
-        fetchJobs(user?.email)
+        fetchJobs(user?.email, currentJobIds)
     }
 
     private fun fetchJobDetails(jobIds: List<String>) {
@@ -82,19 +83,20 @@ class CurrentJobActivity () : BaseActivity() {
             database.child("jobs").child(jobId)
                 .get()
                 .addOnSuccessListener { dataSnapshot ->
-                    // Assuming each job is a custom object, Job
                     val job = dataSnapshot.getValue(Job::class.java)
-                    job?.let { jobsList.add(it) }
+                    if (job != null && job.status != "complete" && job.status != "cancelled") {
+                        jobsList.add(job)
+                    }
                     currentJobsAdapter.notifyDataSetChanged()
                 }
                 .addOnFailureListener { exception ->
-                Log.e("FirebaseError", "Error fetching data", exception)
+                    Log.e("FirebaseError", "Error fetching data", exception)
                 }
         }
     }
-    private fun fetchJobs(userEmail: String?) {
 
-        currentJobsAdapter = CurrentJobsAdapter(jobsList, userEmail)
+    private fun fetchJobs(userEmail: String?, currentJobIds: List<String>) {
+        currentJobsAdapter = CurrentJobsAdapter(jobsList, currentJobIds, userEmail, auth, database, this::showNotification)
         currentJobsRecyclerView.adapter = currentJobsAdapter
     }
 
