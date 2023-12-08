@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -31,6 +33,9 @@ class CurrentRequestActivity () : BaseActivity() {
 
     private lateinit var currentRequestsRecyclerView: RecyclerView
     private lateinit var currentRequestsAdapter: CurrentRequestsAdapter
+
+    private lateinit var emptyView : TextView
+
     private var requestsList = mutableListOf<Job>()
     private var currentRequestsIds = mutableListOf<String>()
 
@@ -53,10 +58,23 @@ class CurrentRequestActivity () : BaseActivity() {
         currentRequestsRecyclerView = findViewById(R.id.currentRequestsRecyclerView)
         currentRequestsRecyclerView.layoutManager = LinearLayoutManager(this)
 
+        emptyView = findViewById<TextView>(R.id.empty_view)
+
         database.child("users").child(user!!.uid).child("currentRequests")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     currentRequestsIds = snapshot.value as? MutableList<String> ?: mutableListOf()
+
+                    if (currentRequestsIds.isNullOrEmpty()) {
+                        Log.e("TESTING", "no current requests")
+                        currentRequestsRecyclerView.visibility = View.GONE;
+                        emptyView.visibility = View.VISIBLE;
+                    }
+                    else {
+                        currentRequestsRecyclerView.visibility = View.VISIBLE;
+                        emptyView.visibility = View.GONE;
+                    }
+
                     Log.d("currentRequestsIds", currentRequestsIds.toString())
                     fetchRequestDetails(currentRequestsIds)
                     fetchRequests(user?.email)

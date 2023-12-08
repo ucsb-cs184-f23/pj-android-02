@@ -28,6 +28,16 @@
         tools:layout_editor_absoluteX="8dp"
         tools:listitem="@layout/current_request_item"/>
 
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:text="You do not have any open requests" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
