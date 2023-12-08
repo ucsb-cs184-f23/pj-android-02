@@ -64,19 +64,25 @@ class UserSelectionActivity : BaseActivity() {
                 showNextRating(reviewList, 0)
             }
         }
-        database.child("users").child(userId).child("usersToReview").setValue(null)
     }
 
     private fun showNextRating(reviewList: MutableList<String>, index: Int) {
-        if (index >= reviewList.size) return // Exit if no more items
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
-        val currentUserId = reviewList[index]
         var totalJobs = 0
         var totalRating = 0
 
         val bottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.activity_rating_system, null)
         bottomSheetDialog.setContentView(view)
+
+        if (index >= reviewList.size) {
+            database.child("users").child(userId).child("usersToReview").setValue(null)
+            bottomSheetDialog.dismiss()
+            return
+        }
+
+        val currentUserId = reviewList[index]
 
         // Set the height of the bottom sheet
         val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
@@ -87,7 +93,6 @@ class UserSelectionActivity : BaseActivity() {
         val closeButton = view.findViewById<Button>(R.id.ratingCloseButton)
         closeButton.setOnClickListener {
             showNextRating(reviewList, index + 1)
-            bottomSheetDialog.dismiss()
         }
 
         val ratingBar = view.findViewById<RatingBar>(R.id.ratingBar)
@@ -101,6 +106,10 @@ class UserSelectionActivity : BaseActivity() {
             val total = snapshot.value as? Int
             if (total != null) {
                 totalJobs = total
+                database.child("users").child(currentUserId).child("totalJobs").setValue(total + 1)
+            }
+            else {
+                database.child("users").child(currentUserId).child("totalJobs").setValue(1)
             }
         }
 
@@ -108,6 +117,10 @@ class UserSelectionActivity : BaseActivity() {
             val total = snapshot.value as? Int
             if (total != null) {
                 totalRating = total
+                database.child("users").child(currentUserId).child("totalRating").setValue(total + deliveryRating)
+            }
+            else {
+                database.child("users").child(currentUserId).child("totalRating").setValue(deliveryRating)
             }
         }
 
@@ -121,31 +134,8 @@ class UserSelectionActivity : BaseActivity() {
                 else {
                     database.child("users").child(currentUserId).child("Rating").setValue(deliveryRating)
                 }
-
-                database.child("users").child(currentUserId).child("totalJobs").get().addOnSuccessListener { snapshot ->
-                    val total = snapshot.value as? Int
-                    if (total != null) {
-                        database.child("users").child(currentUserId).child("totalJobs")
-                            .setValue(total + 1)
-                    } else {
-                        database.child("users").child(currentUserId).child("totalJobs").setValue(1)
-                    }
-
-                    database.child("users").child(currentUserId).child("totalRatings").get()
-                        .addOnSuccessListener { snapshot ->
-                            val total = snapshot.value as? Int
-                            if (total != null) {
-                                database.child("users").child(currentUserId).child("totalRatings")
-                                    .setValue(total + deliveryRating)
-                            } else {
-                                database.child("users").child(currentUserId).child("totalRatings")
-                                    .setValue(deliveryRating)
-                            }
-                        }
-                    }
             }
             showNextRating(reviewList, index + 1)
-            bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.show()
     }

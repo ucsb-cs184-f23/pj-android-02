@@ -330,10 +330,10 @@ class CurrentJobActivity () : BaseActivity() {
                         }
 
                         database.child("users").child(revieweeUserId).child("totalRating").get().addOnSuccessListener { snapshot ->
-                            val total = snapshot.value as? Int
+                            val total2 = snapshot.value as? Int
                             var totalRating = 0
-                            if (total != null) {
-                                totalRating = total
+                            if (total2 != null) {
+                                totalRating = total2
                             }
 
                             database.child("users").child(revieweeUserId).child("Rating").get().addOnSuccessListener { snapshot ->
@@ -345,39 +345,26 @@ class CurrentJobActivity () : BaseActivity() {
                                     database.child("users").child(revieweeUserId).child("Rating").setValue(deliveryRating)
                                 }
 
-                                database.child("users").child(revieweeUserId).child("usersToReview").get().addOnSuccessListener { snapshot ->
-                                    val reviewList = snapshot.value as? MutableList<String>
-                                    if (reviewList != null) {
-                                        reviewList.add(userId)
-                                        database.child("users").child(revieweeUserId).child("usersToReview").setValue(reviewList)
+                                database.child("users").child(revieweeUserId).child("totalJobs").get().addOnSuccessListener { snapshot ->
+                                    val total = snapshot.value as? Int
+                                    if (total != null) {
+                                        database.child("users").child(revieweeUserId).child("totalJobs").setValue(total + 1)
                                     }
                                     else {
-                                        database.child("users").child(revieweeUserId).child("usersToReview").setValue(
-                                            mutableListOf(userId)
-                                        )
+                                        database.child("users").child(revieweeUserId).child("totalJobs").setValue(1)
                                     }
 
-                                    database.child("users").child(revieweeUserId).child("totalJobs").get().addOnSuccessListener { snapshot ->
+                                    database.child("users").child(revieweeUserId).child("totalRating").get().addOnSuccessListener { snapshot ->
                                         val total = snapshot.value as? Int
                                         if (total != null) {
-                                            database.child("users").child(revieweeUserId).child("totalJobs").setValue(total + 1)
+                                            database.child("users").child(revieweeUserId).child("totalRating").setValue(total + deliveryRating)
                                         }
                                         else {
-                                            database.child("users").child(revieweeUserId).child("totalJobs").setValue(1)
+                                            database.child("users").child(revieweeUserId).child("totalRating").setValue(deliveryRating)
                                         }
 
-                                        database.child("users").child(revieweeUserId).child("totalRatings").get().addOnSuccessListener { snapshot ->
-                                            val total = snapshot.value as? Int
-                                            if (total != null) {
-                                                database.child("users").child(revieweeUserId).child("totalRatings").setValue(total + deliveryRating)
-                                            }
-                                            else {
-                                                database.child("users").child(revieweeUserId).child("totalRatings").setValue(deliveryRating)
-                                            }
-
-                                            database.child("users").child(userId)
-                                                .child("currentJob").setValue(null)
-                                        }
+                                        database.child("users").child(userId)
+                                            .child("currentJob").setValue(null)
                                     }
                                 }
                             }
@@ -385,8 +372,35 @@ class CurrentJobActivity () : BaseActivity() {
                     }
                 }
             }
+            setReviewList()
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.show()
+    }
+
+    private fun setReviewList() {
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+        database.child("users").child(userId).child("currentJob").get().addOnSuccessListener { snapshot ->
+            val currentJobId = (snapshot.value).toString()
+
+            database.child("jobs").child(currentJobId).child("userId").get().addOnSuccessListener { snapshot ->
+                val revieweeUserId = (snapshot.value).toString()
+
+                database.child("users").child(revieweeUserId).child("usersToReview").get().addOnSuccessListener { snapshot ->
+                    val reviewList = snapshot.value as? MutableList<String>
+                    if (reviewList != null) {
+                        reviewList.add(userId)
+                        database.child("users").child(revieweeUserId).child("usersToReview")
+                            .setValue(reviewList)
+                    } else {
+                        database.child("users").child(revieweeUserId).child("usersToReview")
+                            .setValue(
+                                mutableListOf(userId)
+                            )
+                    }
+                }
+            }
+        }
     }
 }
