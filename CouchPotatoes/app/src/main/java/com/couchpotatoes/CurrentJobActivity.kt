@@ -319,6 +319,8 @@ class CurrentJobActivity () : BaseActivity() {
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
             var currentJobId = ""
             var revieweeUserId = ""
+            var totalJobs = 0
+            var totalRating = 0
 
             database.child("users").child(userId).child("currentJob").get().addOnSuccessListener { snapshot ->
                 currentJobId = (snapshot.value).toString()
@@ -328,10 +330,24 @@ class CurrentJobActivity () : BaseActivity() {
                 revieweeUserId = (snapshot.value).toString()
             }
 
+            database.child("users").child(revieweeUserId).child("totalJobs").get().addOnSuccessListener { snapshot ->
+                val total = snapshot.value as? Int
+                if (total != null) {
+                    totalJobs = total
+                }
+            }
+
+            database.child("users").child(revieweeUserId).child("totalRating").get().addOnSuccessListener { snapshot ->
+                val total = snapshot.value as? Int
+                if (total != null) {
+                    totalRating = total
+                }
+            }
+
             database.child("users").child(revieweeUserId).child("Rating").get().addOnSuccessListener { snapshot ->
                 val currentRating = snapshot.value as? Double
                 if (currentRating != null) {
-                    database.child("users").child(revieweeUserId).child("Rating").setValue((deliveryRating + currentRating) / 2)
+                    database.child("users").child(revieweeUserId).child("Rating").setValue((deliveryRating + totalRating) / totalJobs)
                 }
                 else {
                     database.child("users").child(revieweeUserId).child("Rating").setValue(deliveryRating)

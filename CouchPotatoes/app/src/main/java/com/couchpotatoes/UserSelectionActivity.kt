@@ -71,6 +71,8 @@ class UserSelectionActivity : BaseActivity() {
         if (index >= reviewList.size) return // Exit if no more items
 
         val currentUserId = reviewList[index]
+        var totalJobs = 0
+        var totalRating = 0
 
         val bottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.activity_rating_system, null)
@@ -95,12 +97,26 @@ class UserSelectionActivity : BaseActivity() {
             deliveryRating = rating.toDouble()
         }
 
+        database.child("users").child(currentUserId).child("totalJobs").get().addOnSuccessListener { snapshot ->
+            val total = snapshot.value as? Int
+            if (total != null) {
+                totalJobs = total
+            }
+        }
+
+        database.child("users").child(currentUserId).child("totalRating").get().addOnSuccessListener { snapshot ->
+            val total = snapshot.value as? Int
+            if (total != null) {
+                totalRating = total
+            }
+        }
+
         val submitButton = view.findViewById<Button>(R.id.ratingSubmitButton)
         submitButton.setOnClickListener{
             database.child("users").child(currentUserId).child("Rating").get().addOnSuccessListener { snapshot ->
                 val currentRating = snapshot.value as? Double
                 if (currentRating != null) {
-                    database.child("users").child(currentUserId).child("Rating").setValue((deliveryRating + currentRating) / 2)
+                    database.child("users").child(currentUserId).child("Rating").setValue((deliveryRating + totalRating) / totalJobs)
                 }
                 else {
                     database.child("users").child(currentUserId).child("Rating").setValue(deliveryRating)
