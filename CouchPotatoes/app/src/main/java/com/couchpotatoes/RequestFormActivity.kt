@@ -9,9 +9,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.NumberPicker
-import android.widget.Toast
 import com.couchpotatoes.classes.Job
-import com.couchpotatoes.classes.User
+import com.couchpotatoes.currentJob.CurrentJobActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -103,8 +102,11 @@ class RequestFormActivity : BaseActivity() {
             val user = FirebaseAuth.getInstance().currentUser
 
             database.child("jobs").child(jobId).setValue(job)
-            database.child("users").child(user!!.uid).child("currentJob").setValue(job.uid.toString())
-
+            database.child("users").child(user!!.uid).child("currentJobs").get().addOnSuccessListener { dataSnapshot ->
+                val jobs = dataSnapshot.value as? MutableList<String> ?: mutableListOf()
+                job.uid?.let { jobs.add(it) }
+                database.child("users").child(user!!.uid).child("currentJobs").setValue(jobs)
+            }
             val confirmationPopup = Popup(this)
             confirmationPopup.showConfirm()
         }

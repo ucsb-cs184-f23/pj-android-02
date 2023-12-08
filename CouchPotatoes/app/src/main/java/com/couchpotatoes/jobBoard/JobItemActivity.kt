@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +12,14 @@ import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
 import com.couchpotatoes.BaseActivity
-import com.couchpotatoes.CurrentJobActivity
+import com.couchpotatoes.currentJob.CurrentJobActivity
 import com.couchpotatoes.R
 import com.couchpotatoes.classes.Job
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -67,24 +71,37 @@ class JobItemActivity : BaseActivity() {
 
         dialogBuilder.setMessage("Are you sure you want to accept this job?")
             .setPositiveButton("Yes") { _, _ ->
+                // Update the job status to accepted
                 database = Firebase.database.reference
                 database.child("jobs").child(job.uid.toString()).child("status").setValue("accepted")
 
-                // Add the job to the user's current job
-                auth = FirebaseAuth.getInstance()
-                database = Firebase.database.reference
-
+                // Get the current user
                 val user = FirebaseAuth.getInstance().currentUser
 
-                database.child("users").child(user!!.uid).child("currentJob").setValue(job.uid.toString())
+                // Reference to the user's currentJobs node
+                val currentJobsRef = Firebase.database.reference.child("users").child(user!!.uid).child("currentJobs")
 
-                // Redirect to Current Job Page
+                currentJobsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val currentJobIds = snapshot.value as? MutableList<String> ?: mutableListOf()
+                        if (!currentJobIds.contains(job.uid.toString())) {
+                            currentJobIds.add(job.uid.toString())
+                            currentJobsRef.setValue(currentJobIds)
+                        }
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("FirebaseError", "Listener was cancelled, error: ${error.toException()}")
+                    }
+                })
                 val intent = Intent(this, CurrentJobActivity::class.java)
                 startActivity(intent)
             }
             .setNegativeButton("No", null)
             .show()
     }
+
 }
 
 class MyAdapter(private val context: Context, private val arrayList: Array<Array<String?>>) : BaseAdapter() {

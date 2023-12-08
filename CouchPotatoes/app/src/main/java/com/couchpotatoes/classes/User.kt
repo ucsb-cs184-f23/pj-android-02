@@ -10,6 +10,6 @@ data class User(
     val address: String? = null,
     val rating: Double? = null,
     val paymentInfo: String? = null,
-    val currentJob: String? = null
+    val currentJobs: List<String>? = null
     ) {
 }
