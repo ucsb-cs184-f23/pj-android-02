@@ -40,6 +40,7 @@ class CurrentJobActivity () : BaseActivity() {
     private lateinit var currentJobsRecyclerView: RecyclerView
     private lateinit var currentJobsAdapter: CurrentJobsAdapter
     private var jobsList = mutableListOf<Job>()
+    private var currentJobIds = mutableListOf<String>()
 
     private var CHANNEL_ID = "couch_potato_channel_id"
     private var NOTIFICATION_ID = 101
@@ -60,21 +61,20 @@ class CurrentJobActivity () : BaseActivity() {
         currentJobsRecyclerView = findViewById(R.id.currentJobsRecyclerView)
         currentJobsRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        var currentJobIds: List<String> = listOf()
         database.child("users").child(user!!.uid).child("currentJobs")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    currentJobIds = snapshot.value as? List<String> ?: listOf()
+                    currentJobIds = snapshot.value as? MutableList<String> ?: mutableListOf()
+                    Log.d("currentJobIds", currentJobIds.toString())
                     fetchJobDetails(currentJobIds)
+                    fetchJobs(user?.email)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     Log.e("FirebaseError", "Listener was cancelled, error: ${error.toException()}")
                 }
             })
-
         // Fetch jobs from Firebase and update jobsList
-        fetchJobs(user?.email, currentJobIds)
     }
 
     private fun fetchJobDetails(jobIds: List<String>) {
@@ -84,7 +84,7 @@ class CurrentJobActivity () : BaseActivity() {
                 .get()
                 .addOnSuccessListener { dataSnapshot ->
                     val job = dataSnapshot.getValue(Job::class.java)
-                    if (job != null && job.status != "complete" && job.status != "cancelled") {
+                    if (job != null && job.status != "complete") {
                         jobsList.add(job)
                     }
                     currentJobsAdapter.notifyDataSetChanged()
@@ -95,7 +95,8 @@ class CurrentJobActivity () : BaseActivity() {
         }
     }
 
-    private fun fetchJobs(userEmail: String?, currentJobIds: List<String>) {
+    private fun fetchJobs(userEmail: String?) {
+        Log.d("fetchJobs", currentJobIds.toString())
         currentJobsAdapter = CurrentJobsAdapter(jobsList, currentJobIds, userEmail, auth, database, this::showNotification)
         currentJobsRecyclerView.adapter = currentJobsAdapter
     }

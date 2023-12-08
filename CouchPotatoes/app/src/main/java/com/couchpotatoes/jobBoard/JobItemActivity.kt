@@ -88,12 +88,15 @@ class JobItemActivity : BaseActivity() {
                             currentJobIds.add(job.uid.toString())
                             currentJobsRef.setValue(currentJobIds)
                         }
+
                     }
 
                     override fun onCancelled(error: DatabaseError) {
                         Log.e("FirebaseError", "Listener was cancelled, error: ${error.toException()}")
                     }
                 })
+                val intent = Intent(this, CurrentJobActivity::class.java)
+                startActivity(intent)
             }
             .setNegativeButton("No", null)
             .show()

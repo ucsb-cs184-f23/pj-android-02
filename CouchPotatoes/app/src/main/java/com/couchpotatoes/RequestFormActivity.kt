@@ -102,8 +102,11 @@ class RequestFormActivity : BaseActivity() {
             val user = FirebaseAuth.getInstance().currentUser
 
             database.child("jobs").child(jobId).setValue(job)
-            database.child("users").child(user!!.uid).child("currentJob").setValue(job.uid.toString())
-
+            database.child("users").child(user!!.uid).child("currentJobs").get().addOnSuccessListener { dataSnapshot ->
+                val jobs = dataSnapshot.value as? MutableList<String> ?: mutableListOf()
+                job.uid?.let { jobs.add(it) }
+                database.child("users").child(user!!.uid).child("currentJobs").setValue(jobs)
+            }
             val confirmationPopup = Popup(this)
             confirmationPopup.showConfirm()
         }

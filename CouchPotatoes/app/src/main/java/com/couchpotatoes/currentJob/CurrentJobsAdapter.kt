@@ -22,7 +22,7 @@ import com.google.firebase.database.getValue
 
 // Gotta show dialog
 class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
-                         private val currentJobIds: List<String>,
+                         private val currentJobIds: MutableList<String>,
                          private val userEmail: String?,
                          private val auth: FirebaseAuth,
                          private val database: DatabaseReference,
@@ -46,7 +46,7 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val jobListJob = jobsList[position]
 
         jobListJob?.uid?.let {
@@ -55,11 +55,6 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val job = dataSnapshot.getValue<Job>()
 
-                        if (job == null || job.status == "complete") {
-                            jobsList.remove(job)
-                            notifyItemRemoved(position)
-                            notifyItemRangeChanged(position, jobsList.size)
-                        }
                         holder.requesterName.text = job?.requesterName
                         holder.requesterEmail.text = job?.requesterEmail
                         holder.item.text = job?.item
@@ -67,6 +62,11 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
                         holder.store.text = job?.store
                         holder.deliveryAddress.text = job?.deliveryAddress
                         holder.status.text = job?.status
+
+                        if (job?.requesterEmail == userEmail) {
+                            holder.completeButton.isEnabled = false
+                            holder.completeButton.text = "Your Request"
+                        }
                         if (job?.status == "accepted") {
                             holder.completeButton.text = "Gather"
                             holder.completeButton.setBackgroundColor(Color.rgb(0,0x66,0x66))
@@ -79,6 +79,71 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
                             holder.completeButton.text = "Complete"
                             holder.completeButton.setBackgroundColor(Color.rgb(0xEE, 0x99, 0x39))
                         }
+
+                        holder.cancelButton.setOnClickListener {
+                            AlertDialog.Builder(it.context)
+                                .setTitle("Cancel Job")
+                                .setMessage("Are you sure you want to cancel this job?")
+                                .setPositiveButton("Yes") { dialog, which ->
+                                    job?.uid.let { uid ->
+                                        // Create a new list excluding the cancelled job's UID
+                                        currentJobIds.remove(uid)
+
+                                        Log.d("current", currentJobIds.toString())
+
+                                        // Update the new job list in the user's 'currentJobs' in Firebase
+                                        auth.currentUser?.uid?.let { userId ->
+                                            database.child("users").child(userId).child("currentJobs").setValue(currentJobIds)
+                                        }
+
+                                        if (userEmail == job?.requesterEmail) {
+                                            if (uid != null) {
+                                                database.child("jobs").child(uid).removeValue()
+                                            }
+                                            notificationCallback("Job cancelled by requester")
+                                        } else {
+                                            if (uid != null) {
+                                                database.child("jobs").child(uid).child("status").setValue("pending")
+                                            }
+                                            notificationCallback("Job cancelled by dasher")
+                                        }
+                                    }
+                                }
+                                .setNegativeButton("No", null)
+                                .show()
+                        }
+                        holder.completeButton.setOnClickListener {
+                            AlertDialog.Builder(it.context)
+                                .setTitle("Job Progress")
+                                .setMessage("Are you sure you have completed this stage?")
+                                .setPositiveButton("Yes") { dialog, which ->
+                                    when (job?.status) {
+                                        "accepted", "gathering", "delivering" -> {
+                                            val nextStatus = when (job?.status) {
+                                                "accepted" -> "gathering"
+                                                "gathering" -> "delivering"
+                                                else -> "complete"
+                                            }
+                                            job?.uid.let { uid -> if (uid != null) {
+                                                database.child("jobs").child(uid).child("status").setValue(nextStatus)
+                                            }
+                                                if (nextStatus == "complete") {
+                                                    currentJobIds.remove(uid)
+
+                                                    Log.d("current", currentJobIds.toString())
+                                                    // Update the new job list in the user's 'currentJobs' in Firebase
+                                                    auth.currentUser?.uid?.let { userId ->
+                                                        database.child("users").child(userId).child("currentJobs").setValue(currentJobIds)
+                                                    }
+                                                }
+                                            }
+                                            notificationCallback("Job status updated to $nextStatus")
+                                        }
+                                    }
+                                }
+                                .setNegativeButton("No", null)
+                                .show()
+                        }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -88,61 +153,10 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
         }
 
 
-        holder.cancelButton.setOnClickListener {
-            AlertDialog.Builder(it.context)
-                .setTitle("Cancel Job")
-                .setMessage("Are you sure you want to cancel this job?")
-                .setPositiveButton("Yes") { dialog, which ->
-                    jobListJob.uid?.let { uid ->
-                        // Create a new list excluding the cancelled job's UID
-                        val newJobIds = currentJobIds.filter { it != uid }
 
-                        // Update the new job list in the user's 'currentJobs' in Firebase
-                        auth.currentUser?.uid?.let { userId ->
-                            database.child("users").child(userId).child("currentJobs").setValue(newJobIds)
-                        }
-
-                        if (userEmail == jobListJob.requesterEmail) {
-                            database.child("jobs").child(uid).removeValue()
-                            notificationCallback("Job cancelled by requester")
-                        } else {
-                            notificationCallback("Job cancelled by dasher")
-                        }
-                    }
-                }
-                .setNegativeButton("No", null)
-                .show()
-        }
-        holder.completeButton.setOnClickListener {
-            AlertDialog.Builder(it.context)
-                .setTitle("Complete Job")
-                .setMessage("Are you sure you have completed this stage?")
-                .setPositiveButton("Yes") { dialog, which ->
-                    when (jobListJob.status) {
-                        "accepted", "gathering", "delivering" -> {
-                            val nextStatus = when (jobListJob.status) {
-                                "accepted" -> "gathering"
-                                "gathering" -> "delivering"
-                                else -> "complete"
-                            }
-                            jobListJob.uid?.let { uid -> database.child("jobs").child(uid).child("status").setValue(nextStatus)
-                                if (nextStatus == "complete") {
-                                    val newJobIds = currentJobIds.filter { it != uid }
-
-                                    // Update the new job list in the user's 'currentJobs' in Firebase
-                                    auth.currentUser?.uid?.let { userId ->
-                                        database.child("users").child(userId).child("currentJobs").setValue(newJobIds)
-                                    }
-                                }
-                            }
-                            notificationCallback("Job status updated to $nextStatus")
-                        }
-                    }
-                }
-                .setNegativeButton("No", null)
-                .show()
-        }
     }
+
+    // PUT THE STUFF INSIDE OF THE ONDATACHSNGE SO IT YODATES ANBD TIUY CSAN SET DIALOG TEXT
 
 
     override fun getItemCount() = jobsList.size
