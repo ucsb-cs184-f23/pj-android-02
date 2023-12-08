@@ -78,6 +78,10 @@ class JobItemActivity : BaseActivity() {
                 // Get the current user
                 val user = FirebaseAuth.getInstance().currentUser
 
+                if (user != null) {
+                    database.child("jobs").child(job.uid.toString()).child("hustlerId").setValue(user.uid)
+                }
+
                 // Reference to the user's currentJobs node
                 val currentJobsRef = Firebase.database.reference.child("users").child(user!!.uid).child("currentJobs")
 

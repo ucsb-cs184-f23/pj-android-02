@@ -130,6 +130,16 @@ class CurrentJobsAdapter(private val context: Context,
                                             if (uid != null) {
                                                 database.child("jobs").child(uid).removeValue()
                                             }
+                                            if (job?.hustlerId != null) {
+                                                database.child("users").child(job.hustlerId!!).child("currentJobs").get().addOnSuccessListener {
+                                                    var currentJobIds = it.value as? MutableList<String>
+
+                                                    if (currentJobIds != null) {
+                                                        currentJobIds.remove(uid)
+                                                    }
+                                                    database.child("users").child(job.hustlerId!!).child("currentJobs").setValue(currentJobIds)
+                                                }
+                                            }
                                             notificationCallback("Job cancelled by requester")
                                         } else {
                                             if (uid != null) {
