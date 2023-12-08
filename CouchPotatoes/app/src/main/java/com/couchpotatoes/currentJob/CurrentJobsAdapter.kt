@@ -67,15 +67,15 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
                             holder.completeButton.isEnabled = false
                             holder.completeButton.text = "Your Request"
                         }
-                        if (job?.status == "accepted") {
+                        else if (job?.status == "accepted") {
                             holder.completeButton.text = "Gather"
                             holder.completeButton.setBackgroundColor(Color.rgb(0,0x66,0x66))
                         }
-                        if (job?.status == "gathering") {
+                        else if (job?.status == "gathering") {
                             holder.completeButton.text = "Deliver"
                             holder.completeButton.setBackgroundColor(Color.rgb(0xC4, 0x50, 0x25))
                         }
-                        if (job?.status == "delivering") {
+                        else if (job?.status == "delivering") {
                             holder.completeButton.text = "Complete"
                             holder.completeButton.setBackgroundColor(Color.rgb(0xEE, 0x99, 0x39))
                         }
