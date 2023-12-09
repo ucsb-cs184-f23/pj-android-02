@@ -78,7 +78,7 @@ class CurrentJobsAdapter(private val context: Context,
                                 database.child("users").child(job.hustlerId!!).child("rating").get()
                                     .addOnSuccessListener { dataSnapshot ->
                                         holder.rating.text =
-                                            String.format("%.1f", dataSnapshot.value as Double)
+                                            String.format("%.1f", dataSnapshot.value as? Double ?: (dataSnapshot.value as? Long)?.toDouble())
                                     }
                             }
                             else {
