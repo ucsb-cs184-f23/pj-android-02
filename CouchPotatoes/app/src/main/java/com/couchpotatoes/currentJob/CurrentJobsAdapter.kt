@@ -158,7 +158,9 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
                                                     }
                                                 }
                                             }
-                                            notificationCallback("Job status updated to $nextStatus")
+                                            if (userEmail == job?.requesterEmail) {
+                                                notificationCallback("Job status updated to $nextStatus")
+                                            }
                                         }
                                     }
                                 }
