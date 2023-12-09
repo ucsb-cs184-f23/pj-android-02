@@ -41,6 +41,7 @@ class CurrentJobsAdapter(private val context: Context,
         val item = view.findViewById<TextView>(R.id.item)
         val price = view.findViewById<TextView>(R.id.price)
         val store = view.findViewById<TextView>(R.id.store)
+        val rating = view.findViewById<TextView>(R.id.rating)
         val deliveryAddress = view.findViewById<TextView>(R.id.deliveryAddress)
         val status = view.findViewById<TextView>(R.id.status)
         val cancelButton = view.findViewById<Button>(R.id.cancel)
@@ -73,6 +74,16 @@ class CurrentJobsAdapter(private val context: Context,
                         if (job?.requesterEmail == userEmail) {
                             holder.completeButton.isEnabled = false
                             holder.completeButton.visibility = View.GONE
+                            if (job?.hustlerId != null) {
+                                database.child("users").child(job.hustlerId!!).child("rating").get()
+                                    .addOnSuccessListener { dataSnapshot ->
+                                        holder.rating.text =
+                                            String.format("%.1f", dataSnapshot.value as Double)
+                                    }
+                            }
+                            else {
+                                holder.rating.text = "Not Yet Accepted"
+                            }
                             val color = ContextCompat.getColor(context, R.color.aqua)
                             holder.cancelButton.backgroundTintList = ColorStateList.valueOf(color)
                             when (job?.status) {
@@ -91,6 +102,9 @@ class CurrentJobsAdapter(private val context: Context,
                         }
                         else if (job?.status == "accepted") {
                             holder.completeButton.text = "Gather"
+                            if (job?.rating != 0.0) {
+                                holder.rating.text = String.format("%.1f", job?.rating)
+                            }
                             holder.completeButton.setBackgroundColor(Color.rgb(0,0x66,0x66))
                         }
                         else if (job?.status == "gathering") {
@@ -134,9 +148,7 @@ class CurrentJobsAdapter(private val context: Context,
                                                 database.child("users").child(job.hustlerId!!).child("currentJobs").get().addOnSuccessListener {
                                                     var currentJobIds = it.value as? MutableList<String>
 
-                                                    if (currentJobIds != null) {
-                                                        currentJobIds.remove(uid)
-                                                    }
+                                                    currentJobIds?.remove(uid)
                                                     database.child("users").child(job.hustlerId!!).child("currentJobs").setValue(currentJobIds)
                                                 }
                                             }

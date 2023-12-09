@@ -38,6 +38,12 @@ class JobItemActivity : BaseActivity() {
 
         job = intent.getSerializableExtra("job") as Job
 
+        var message = if (job.rating == 0.0) {
+            "Not Yet Rated"
+        } else {
+            String.format("%.1f", job.rating)
+        }
+
         val users = arrayOf(
             arrayOf("Requester:", job.requesterName),
             arrayOf("Requester Email:", job.requesterEmail),
@@ -46,7 +52,7 @@ class JobItemActivity : BaseActivity() {
             arrayOf("Store:", job.store),
             arrayOf("Delivery Address:", job.deliveryAddress),
             arrayOf("Status:", job.status),
-            arrayOf("User Rating:", String.format("%.1f", job.rating))
+            arrayOf("User Rating:", message)
         )
 
         adapter = MyAdapter(this, users)
