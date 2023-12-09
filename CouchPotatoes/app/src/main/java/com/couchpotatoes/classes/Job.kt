@@ -19,6 +19,9 @@ data class Job constructor(
     var deliveryAddress: String? = null,
     var expirationTime: Long? = null,
     var category: String? = null,
-    var status: String? = null
+    var status: String? = null,
+    var userId: String? = null,
+    var hustlerId: String? = null,
+    var rating: Double? = null
 ) : Serializable {
 }

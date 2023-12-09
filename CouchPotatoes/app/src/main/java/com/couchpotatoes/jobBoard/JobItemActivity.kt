@@ -38,6 +38,12 @@ class JobItemActivity : BaseActivity() {
 
         job = intent.getSerializableExtra("job") as Job
 
+        var message = if (job.rating == 0.0) {
+            "Not Yet Rated"
+        } else {
+            String.format("%.1f", job.rating)
+        }
+
         val users = arrayOf(
             arrayOf("Requester:", job.requesterName),
             arrayOf("Requester Email:", job.requesterEmail),
@@ -45,7 +51,8 @@ class JobItemActivity : BaseActivity() {
             arrayOf("Price:", job.price),
             arrayOf("Store:", job.store),
             arrayOf("Delivery Address:", job.deliveryAddress),
-            arrayOf("Status:", job.status)
+            arrayOf("Status:", job.status),
+            arrayOf("User Rating:", message)
         )
 
         adapter = MyAdapter(this, users)
@@ -78,6 +85,10 @@ class JobItemActivity : BaseActivity() {
                 // Get the current user
                 val user = FirebaseAuth.getInstance().currentUser
 
+                if (user != null) {
+                    database.child("jobs").child(job.uid.toString()).child("hustlerId").setValue(user.uid)
+                }
+
                 // Reference to the user's currentJobs node
                 val currentJobsRef = Firebase.database.reference.child("users").child(user!!.uid).child("currentJobs")
 
@@ -104,7 +115,7 @@ class JobItemActivity : BaseActivity() {
 
 }
 
-class MyAdapter(private val context: Context, private val arrayList: Array<Array<String?>>) : BaseAdapter() {
+class MyAdapter(private val context: Context, private val arrayList: Array<Array<out String?>>) : BaseAdapter() {
     private lateinit var key: TextView
     private lateinit var value: TextView
     override fun getCount(): Int {

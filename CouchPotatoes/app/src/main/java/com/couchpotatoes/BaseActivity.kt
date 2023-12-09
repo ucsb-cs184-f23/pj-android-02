@@ -47,15 +47,15 @@ open class BaseActivity : AppCompatActivity() {
                         false
                     }
                 }
+                primaryItem("Current Job") {
+                    onClick { _ ->
+                        val intent = Intent(context, CurrentJobActivity::class.java)
+                        startActivity(intent)
+                        false
+                    }
+                }
 
                 if (it.value.toString() == "dasher") {
-                    primaryItem("Current Job") {
-                        onClick { _ ->
-                            val intent = Intent(context, CurrentJobActivity::class.java)
-                            startActivity(intent)
-                            false
-                        }
-                    }
                     primaryItem("Job Board") {
                         onClick { _ ->
                             val intent = Intent(context, JobBoardActivity::class.java)
