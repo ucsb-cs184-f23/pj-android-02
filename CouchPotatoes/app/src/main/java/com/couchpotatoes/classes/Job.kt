@@ -21,6 +21,7 @@ data class Job constructor(
     var category: String? = null,
     var status: String? = null,
     var userId: String? = null,
-    var hustlerId: String? = null
+    var hustlerId: String? = null,
+    var rating: Double? = null
 ) : Serializable {
 }

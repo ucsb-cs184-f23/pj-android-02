@@ -76,6 +76,7 @@ class RequestFormActivity : BaseActivity() {
     fun submitButtonHandler(view: View) {
         //Decide what happens when the user clicks the submit button
         database = Firebase.database.reference
+        val userId = auth.currentUser!!.uid
 
         val whatEditText = findViewById<View>(R.id.what) as EditText
         val what = whatEditText.text.toString()
@@ -97,37 +98,79 @@ class RequestFormActivity : BaseActivity() {
         // switch to better system later
         val jobId = UUID.randomUUID().toString()
 
-        isAllFieldsChecked = checkAllFields()
+        database.child("users").child(userId).child("rating").get().addOnSuccessListener { snapshot ->
+            val rating = snapshot.value as? Double ?: (snapshot.value as? Long)?.toDouble()
 
-        if (isAllFieldsChecked) {
-            // create job
-            val job = Job(
-                jobId,
-                FirebaseAuth.getInstance().currentUser!!.displayName,
-                FirebaseAuth.getInstance().currentUser!!.email,
-                what,
-                cost,
-                where,
-                address,
-                expirationTime,
-                category,
-                "pending",
-                FirebaseAuth.getInstance().currentUser!!.uid)
+            if (rating != null) {
+                isAllFieldsChecked = checkAllFields()
 
-            val user = FirebaseAuth.getInstance().currentUser
+                if (isAllFieldsChecked) {
+                    // create job
+                    val job = Job(
+                        jobId,
+                        FirebaseAuth.getInstance().currentUser!!.displayName,
+                        FirebaseAuth.getInstance().currentUser!!.email,
+                        what,
+                        cost,
+                        where,
+                        address,
+                        expirationTime,
+                        category,
+                        "pending",
+                        FirebaseAuth.getInstance().currentUser!!.uid,
+                        rating)
 
-            database.child("jobs").child(jobId).setValue(job)
-            database.child("users").child(user!!.uid).child("currentJobs").get().addOnSuccessListener { dataSnapshot ->
-                val jobs = dataSnapshot.value as? MutableList<String> ?: mutableListOf()
-                job.uid?.let { jobs.add(it) }
-                database.child("users").child(user!!.uid).child("currentJobs").setValue(jobs)
+                    val user = FirebaseAuth.getInstance().currentUser
+
+                    database.child("jobs").child(jobId).setValue(job)
+                    database.child("users").child(user!!.uid).child("currentJobs").get().addOnSuccessListener { dataSnapshot ->
+                        val jobs = dataSnapshot.value as? MutableList<String> ?: mutableListOf()
+                        job.uid?.let { jobs.add(it) }
+                        database.child("users").child(user!!.uid).child("currentJobs").setValue(jobs)
+                    }
+                    val confirmationPopup = Popup(this)
+                    confirmationPopup.showConfirm()
+                }
+                else{
+                    val confirmationPopup = Popup(this)
+                    confirmationPopup.showError()
+                }
             }
-            val confirmationPopup = Popup(this)
-            confirmationPopup.showConfirm()
-        }
-        else{
-            val confirmationPopup = Popup(this)
-            confirmationPopup.showError()
+            else {
+                isAllFieldsChecked = checkAllFields()
+
+                if (isAllFieldsChecked) {
+                    // create job
+                    val job = Job(
+                        jobId,
+                        FirebaseAuth.getInstance().currentUser!!.displayName,
+                        FirebaseAuth.getInstance().currentUser!!.email,
+                        what,
+                        cost,
+                        where,
+                        address,
+                        expirationTime,
+                        category,
+                        "pending",
+                        FirebaseAuth.getInstance().currentUser!!.uid,
+                        0.0)
+
+                    val user = FirebaseAuth.getInstance().currentUser
+
+                    database.child("jobs").child(jobId).setValue(job)
+                    database.child("users").child(user!!.uid).child("currentJobs").get().addOnSuccessListener { dataSnapshot ->
+                        val jobs = dataSnapshot.value as? MutableList<String> ?: mutableListOf()
+                        job.uid?.let { jobs.add(it) }
+                        database.child("users").child(user!!.uid).child("currentJobs").setValue(jobs)
+                    }
+                    val confirmationPopup = Popup(this)
+                    confirmationPopup.showConfirm()
+                }
+                else{
+                    val confirmationPopup = Popup(this)
+                    confirmationPopup.showError()
+                }
+            }
         }
     }
 
