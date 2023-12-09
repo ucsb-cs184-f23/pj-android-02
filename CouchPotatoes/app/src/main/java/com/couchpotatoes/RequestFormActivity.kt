@@ -118,6 +118,7 @@ class RequestFormActivity : BaseActivity() {
                         category,
                         "pending",
                         FirebaseAuth.getInstance().currentUser!!.uid,
+                        null,
                         rating)
 
                     val user = FirebaseAuth.getInstance().currentUser
@@ -153,6 +154,7 @@ class RequestFormActivity : BaseActivity() {
                         category,
                         "pending",
                         FirebaseAuth.getInstance().currentUser!!.uid,
+                        null,
                         0.0)
 
                     val user = FirebaseAuth.getInstance().currentUser
