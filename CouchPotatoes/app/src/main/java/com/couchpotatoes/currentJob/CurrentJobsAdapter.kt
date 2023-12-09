@@ -49,22 +49,6 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val jobListJob = jobsList[position]
 
-        jobListJob?.uid?.let{
-            database.child("jobs").child(it).child("status").addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val status = snapshot.getValue<String>()
-
-                    if (userEmail == jobListJob.requesterEmail) {
-                        notificationCallback("Job status updated to $status")
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    println("The read failed: " + error.code)
-                }
-            })
-        }
-
         jobListJob?.uid?.let {
             database.child("jobs").child(it)
                 .addValueEventListener(object : ValueEventListener {
@@ -173,6 +157,9 @@ class CurrentJobsAdapter(private val jobsList: MutableList<Job>,
                                                         database.child("users").child(userId).child("currentJobs").setValue(currentJobIds)
                                                     }
                                                 }
+                                            }
+                                            if (userEmail == job?.requesterEmail) {
+                                                notificationCallback("Job status updated to $nextStatus")
                                             }
                                         }
                                     }
