@@ -8,11 +8,32 @@ Team Members: Wesley Kam, Cyril Wang
 
 -------------------------------------
 
-Sprint Planning - 10/16/23
+Sprint 1 Planning - 
 
 Leader: Luke Li
+
 -------------------------------------
 
 Retro 1 - 
 
 Leader: Cyril Wang
+
+-------------------------------------
+
+Sprint 2 Planning - 
+
+Leader: Wesley Kam
+
+--------------------------------------
+
+Retro 2 - 
+
+Leader: Luke Li
+
+--------------------------------------
+
+Sprint 3 Planning:
+
+Leader: Dylan Chung
+
+
