@@ -31,6 +31,10 @@ Once you have downloaded the app, click Get Started to login.
 
 <img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/0c6fa001-012d-499b-bf59-a7a8ec898ba6">
 
+If you haven't set your default preferences, you will be prompted for your name, number, and address.
+
+<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/b829f431-0ff1-451c-83bb-0d28c372d21c">
+
 After the default setup and login, you should reach the role selection page:
 
 <img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/9b8907b9-6313-4545-b4c2-c097c942fda4">
@@ -39,21 +43,34 @@ From here, you can get started. For more information on how to use the app, refe
 
 # Features and Functionality:
 
-There are four main key features, two of which are tied to the role selected.
+There are five main key features, two of which are tied to the role selected.
 
 The first key feature, not tied to a specific role, is to look at your user profile. From here, you should be able to see all of your default information and your personal user information.
 
-<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/d9e4a09d-4045-4687-9400-74e673dabd01">
+<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/c3339d50-fd6e-45b7-b262-9aee55eafda7">
 
 The second key feature, tied to requesters, is to request a job. From here, you can fill out the necessary details, what you want, where you want it from, where you want it delivered, how much you are willing to pay.
 
-<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/18bd1d22-7309-46c4-989f-8a453a78fa3e">
+<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/b5c31fbf-11d6-4a8d-9b67-2a22b5420352">
 
 The third key feature, tied to hustlers, is to pick a job. There is a job bounty board that includes all available jobs. From here, you can select a job to see additional information. Once you are here, you can choose to select the job to complete.
 
-<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/964b3c0f-94d7-486f-ae97-03435e0e9374">
-<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/490c530b-d51d-4875-abc8-3b5e110854ac">
+<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/49e71f7f-1f84-4a1c-8d9a-cc06a5358def">
+<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/96b0b4aa-dbc1-4902-b836-5a29b4865f1a">
+
 
 The fourth key feature is the ability to see your current job. From the current job page, both as a requester and hustler, you can see the current job you are assigned. From here, you can choose to cancel the job or complete the job. If you are a requester, cancelling the job will remove the job from the job board. If you are a hustler, cancelling the job will remove the current job from your current job page and return it to the bounty board. If you are completing the job, it will disappear from your current job page.
 
-<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/fac74f06-6f4d-47a9-806d-eb627cc5729f">
+<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/605fa737-5796-461f-a5ac-5e029a61408b">
+<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/ee69fa54-8822-4b6d-8853-ce7b1149a87f">
+
+The fifth key feature is the ability to rate your counterpart. 
+
+As a dasher, once you complete your request, you will be prompted for a rating.
+
+<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/97cbe0ad-5341-4967-b762-fef8991233b3">
+
+As a requester, the next time you open up your app after completing your request you will be prompted for a rating.
+
+<img width="200" src="https://github.com/ucsb-cs184-f23/pj-android-02/assets/77405374/4ae6f6e1-23b4-40c4-ae9e-54b6483ea289">
+
