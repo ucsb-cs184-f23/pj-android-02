@@ -16,7 +16,7 @@ For our tech stack, we are using the Android Studio IDE, Kotlin programming lang
 ## External Libraries
 In our app, we used a few external libraries that simplified our work process. One such library was https://github.com/zsmb13/MaterialDrawerKt, which was a Kotlin wrapper for the MaterialDrawer library that provided the use of a navigation menu that we used in our app. We also used the Espresso library for some introductory UI testing of our app. 
 
-Beyond that, we mainly used the native android libraries, (Android Jetpack libraries)[https://developer.android.com/jetpack], and Firebase related libraries.
+Beyond that, we mainly used the native android libraries, [Android Jetpack libraries](https://developer.android.com/jetpack), and Firebase related libraries.
 
 ## Artwork
 The artwork and splash screens that are used in our app were produced by ChatGPT.
