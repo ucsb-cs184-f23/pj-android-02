@@ -43,5 +43,14 @@ preferences in the future, adding form validations, improving database retrieval
 
 Aside from code contributions, I also helped the team with ideation and discussions and led our scrum meetings.
 
-PRs: Initial Job Board UI Splash Screen with app Logo Requester/Hustler custom designed buttons, App color scheme Request Form UI overhaul Login Page UI 
-overhaul Job Board UI overhaul Toolbar Hotfix User Preferences Set and Edit page, Form Validation, Database Improvements Database Hotfix Rating System
+PRs: 
+[Initial Job Board UI](https://github.com/ucsb-cs184-f23/pj-android-02/pull/17)
+[Splash Screen with app Logo](https://github.com/ucsb-cs184-f23/pj-android-02/pull/47)
+[Requester/Hustler custom designed buttons, App color scheme](https://github.com/ucsb-cs184-f23/pj-android-02/pull/57)
+[Request Form UI overhaul](https://github.com/ucsb-cs184-f23/pj-android-02/pull/62)
+[Login Page UI overhaul](https://github.com/ucsb-cs184-f23/pj-android-02/pull/64)
+[Job Board UI overhaul](https://github.com/ucsb-cs184-f23/pj-android-02/pull/72)
+[Toolbar Hotfix](https://github.com/ucsb-cs184-f23/pj-android-02/pull/73)
+[User Preferences Set and Edit page, Form Validation, Database Improvements](https://github.com/ucsb-cs184-f23/pj-android-02/pull/91)
+[Database Hotfix](https://github.com/ucsb-cs184-f23/pj-android-02/pull/101)
+[Rating System](https://github.com/ucsb-cs184-f23/pj-android-02/pull/117)
