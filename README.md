@@ -23,9 +23,8 @@ Deliverers / "Hustlers" - Users that deliver the items to the requesters. These 
 
 ## Deployment
 
-Download this APK file on an Android device and run it: [Couch Potatoes](./team/couch_potatoes.apk)
-
-Also located [here]([https://drive.google.com/drive/u/0/folders/1_nB5_r8CvIRJbZBfV-j6ABMMy1OPDl8W](https://drive.google.com/file/d/1g-vP2w-QzlWKR5pR-GcIGIT8lQoQEopR/view?usp=drive_link))
+Download this APK file on an Android device and run it: [Couch Potatoes](./team/couch_potatoes.apk).
+Also located [here](https://drive.google.com/file/d/1g-vP2w-QzlWKR5pR-GcIGIT8lQoQEopR/view?usp=drive_link)
 
 This should automatically install the app
 
