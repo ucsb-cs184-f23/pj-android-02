@@ -6,6 +6,8 @@ My contributions included contributing code, ideation, UI design, and deployment
 
 The notable PRs I worked on were [implementing authentication](https://github.com/ucsb-cs184-f23/pj-android-02/pull/14), [creating the current job page](https://github.com/ucsb-cs184-f23/pj-android-02/pull/43), [allowing job cancellation and completion](https://github.com/ucsb-cs184-f23/pj-android-02/pull/55), and [allowing multiple current jobs](https://github.com/ucsb-cs184-f23/pj-android-02/pull/114).
 
+For the most part, I believe the contributors graph was pretty accurate. I often found myself thinking that Cyril and Wesley's changes provided large and tangible changes for the user experience. I also know that Luke ended up in a weird situation where his changes were attributed to a different git account that wasn't the school github account. He also took the time to work on and correct other team members' mishaps at times. Other than that, I believe that the contributors graph was relatively accurate.
+
 ## Cyril:
 
 My contributions revolved around our app's interaction with the database. These included setting up our Firebase database for us to write our data to, the 
