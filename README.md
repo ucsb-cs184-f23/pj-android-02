@@ -13,6 +13,14 @@ A delivery app, where users can be both the deliverers and the ones getting deli
 ## Tech Stack
 For our tech stack, we are using the Android Studio IDE, Kotlin programming language, and Firebase database.
 
+## External Libraries
+In our app, we used a few external libraries that simplified our work process. One such library was https://github.com/zsmb13/MaterialDrawerKt, which was a Kotlin wrapper for the MaterialDrawer library that provided the use of a navigation menu that we used in our app. We also used the Espresso library for some introductory UI testing of our app. 
+
+Beyond that, we mainly used the native android libraries, (Android Jetpack libraries)[https://developer.android.com/jetpack], and Firebase related libraries.
+
+## Artwork
+The artwork and splash screens that are used in our app were produced by ChatGPT.
+
 ## Approach
 Our approach is to create a basic basic delivery app, where users can make requests for items to be delivered and for other users to be able to accept those requests and deliver the items. Our goal is to forst create a viable product where the core functionality is present. Right now, the plan is to make something like a job board, where requests will be pop ups that contain specific details (such as the item, price, store, address, etc...) and deliverers will be able to accept those requests. After that, we plan on adding more complex features, such as an interactive map where requests will pop up at the location of the store, a rating system for users so users can know whether they are trustworthy or not, and hopefully a fleshed-out payment system. 
 
